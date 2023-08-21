@@ -1,7 +1,9 @@
 package com.digitar120.shoppingcartapp.persistence.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "item")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
