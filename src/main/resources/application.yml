@@ -2,7 +2,7 @@ spring:
   output:
     ansi:
       enabled=ALWAYS
-    
+
   application:
     name: shopping-cart-app
 
