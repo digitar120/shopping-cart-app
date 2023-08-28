@@ -22,10 +22,6 @@ public class ItemService {
     }
 
     public List<Item> findAll(){
-        List<Item> itemList = this.repository.findAll();
-        if (itemList.isEmpty()){
-            throw new ItemNotFoundException();
-        }
         return this.repository.findAll();
     }
 
