@@ -23,4 +23,10 @@ public class Item {
 
     @Column(name = "ITEM_QUANTITY")
     private Integer quantity;
+
+    // Constructor con ID automático
+    public Item (String description, Integer quantity){
+        this.description = description;
+        this.quantity = quantity;
+    }
 }
