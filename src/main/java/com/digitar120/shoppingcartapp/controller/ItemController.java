@@ -23,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     public Item newItem(@RequestBody Item item){
-        return itemService.saveToRepo(item);
+        return itemService.saveToRepoIfNotPresent(item);
     }
 
     @PutMapping("/{id}")
