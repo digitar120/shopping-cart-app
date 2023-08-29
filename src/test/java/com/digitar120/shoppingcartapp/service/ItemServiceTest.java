@@ -3,6 +3,7 @@ package com.digitar120.shoppingcartapp.service;
 import com.digitar120.shoppingcartapp.exception.ItemException;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.repository.ItemRepository;
+import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -156,7 +157,7 @@ public class ItemServiceTest {
     public void test_when_editItem_then_editedItemInRepository (){
         // Arrange
         Item item = itemModel1;
-        Item edited_item = new Item(ITEM_1, LAPICERA, 1);
+        EditedItemDTO edited_item = new Item(ITEM_1, LAPICERA, 1);
 
         // Act
         when(repository.save(item)).thenReturn(item);

@@ -3,6 +3,7 @@ package com.digitar120.shoppingcartapp.controller;
 import com.digitar120.shoppingcartapp.exception.ItemNotFoundException;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.service.ItemService;
+import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public Item editItem(@RequestBody Item item, @PathVariable Long id){
+    public Item editItem(@RequestBody EditedItemDTO item, @PathVariable Long id){
         return itemService.editItem(item, id);
     }
 
