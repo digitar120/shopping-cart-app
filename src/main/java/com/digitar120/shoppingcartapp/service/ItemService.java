@@ -1,9 +1,10 @@
 package com.digitar120.shoppingcartapp.service;
 
 import com.digitar120.shoppingcartapp.exception.ItemException;
-import com.digitar120.shoppingcartapp.exception.ItemNotFoundException;
+import com.digitar120.shoppingcartapp.mapper.ItemToEditedItem;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.repository.ItemRepository;
+import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,14 @@ public class ItemService {
 
     @Autowired
     private final ItemRepository repository;
-    public ItemService(ItemRepository repository) {
+    private final ItemToEditedItem mapper;
+    public ItemService(ItemRepository repository, ItemToEditedItem mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
+
+
+
 
     public List<Item> findAll(){
         return this.repository.findAll();
@@ -36,6 +42,7 @@ public class ItemService {
         return repository.save(item);
     }
 
+    // Para métodos POST
     public Item saveToRepoIfNotPresent(Item item){
         Optional<Item> optionalItem = this.repository.findById(item.getId());
 
@@ -46,14 +53,16 @@ public class ItemService {
         }
     }
 
-    public Item editItem(Item edited_item, Long id){
-        return repository.findById(id)
-                .map (item -> {
-                    item.setDescription(edited_item.getDescription());
-                    item.setQuantity(edited_item.getQuantity());
-                    return repository.save(item);
-                })
-                .orElseThrow(() -> new ItemException("No se encontró un elemento con ID " + edited_item.getId(), HttpStatus.NOT_FOUND));
+    public Item editItem(EditedItemDTO edited_item, Long id){
+        Item test = mapper.map(edited_item);
+        test.setId(id);
+
+        Optional<Item> optionalItem = this.repository.findById(id);
+        if (optionalItem.isEmpty()) {
+            throw new ItemException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND);
+        } else {
+            return repository.save(test);
+        }
     }
 
     public void deleteById(Long id) {
