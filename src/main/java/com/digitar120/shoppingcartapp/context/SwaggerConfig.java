@@ -21,7 +21,7 @@ public class SwaggerConfig {
                 .select()
 
                 // Escanear elementos y clases anotadas con @RestController
-                .apis(RequestHandlerSelectors.basePackage("com.digitar120.todoapp.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.digitar120.shoppingcartapp.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
