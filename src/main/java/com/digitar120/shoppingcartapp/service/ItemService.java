@@ -53,15 +53,15 @@ public class ItemService {
         }
     }
 
-    public Item editItem(EditedItemDTO edited_item, Long id){
-        Item test = mapper.map(edited_item);
-        test.setId(id);
+    public Item editItem(EditedItemDTO edited_item_fields, Long id){
+        Item item = mapper.map(edited_item_fields);
+        item.setId(id);
 
         Optional<Item> optionalItem = this.repository.findById(id);
         if (optionalItem.isEmpty()) {
             throw new ItemException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND);
         } else {
-            return repository.save(test);
+            return repository.save(item);
         }
     }
 
