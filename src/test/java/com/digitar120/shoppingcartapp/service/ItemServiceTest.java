@@ -1,6 +1,7 @@
 package com.digitar120.shoppingcartapp.service;
 
 import com.digitar120.shoppingcartapp.exception.ItemException;
+import com.digitar120.shoppingcartapp.mapper.ItemToEditedItem;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.repository.ItemRepository;
 import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
@@ -30,12 +31,18 @@ public class ItemServiceTest {
 
     Item itemModel1 = new Item(ITEM_1, LAPIZ, 1);
     Item itemModel2 = new Item(ITEM_2, LAPICERA, 2);
+    EditedItemDTO editedItemModel = new EditedItemDTO(LAPICERA,2);
+
+
 
     @InjectMocks
     private ItemService itemService;
 
     @Mock
     private ItemRepository repository;
+
+    @Mock
+    private ItemToEditedItem mapper;
 
     @Test
     @DisplayName("Test findAll not empty OK")
@@ -155,18 +162,34 @@ public class ItemServiceTest {
     @Test
     @DisplayName("Test editItem produces an edited item")
     public void test_when_editItem_then_editedItemInRepository (){
-        // Arrange
-        Item item = itemModel1;
-        EditedItemDTO edited_item = new Item(ITEM_1, LAPICERA, 1);
+        //Assert
+        Item originalItem = itemModel1;
+        EditedItemDTO itemDTO = editedItemModel;
+        Item editedItem = new Item(ITEM_1, LAPICERA, 2);
+
+        when(mapper.map(itemDTO)).thenReturn(editedItem);
+        when(repository.save(editedItem)).thenReturn(editedItem);
 
         // Act
-        when(repository.save(item)).thenReturn(item);
+        repository.save(originalItem);
+        Item returnedItem = itemService.editItem(itemDTO, originalItem.getId());
 
-        itemService.saveToRepo(item);
-        Item actualResult = itemService.editItem(edited_item, item.getId());
 
         // Assert
-        assertEquals(edited_item, actualResult);
+        assertEquals(editedItem, returnedItem);
+    }
+
+    @Test(expected = ItemException.class)
+    @DisplayName("Test deleteItem throws exception when no item")
+    public void test_when_deleteItemAndNoItem_then_throwException(){
+        // Arrange
+        Long id = ITEM_1;
+
+        // Act
+        itemService.deleteById(id);
+
+        // Assert
+        verify(itemService, times(1)).deleteById(ITEM_1);
     }
 
 

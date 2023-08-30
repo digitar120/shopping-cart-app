@@ -2,6 +2,7 @@ package com.digitar120.shoppingcartapp.mapper;
 
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component

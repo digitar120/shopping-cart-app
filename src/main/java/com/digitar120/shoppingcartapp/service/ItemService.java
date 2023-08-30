@@ -23,9 +23,6 @@ public class ItemService {
         this.mapper = mapper;
     }
 
-
-
-
     public List<Item> findAll(){
         return this.repository.findAll();
     }
