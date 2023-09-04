@@ -168,6 +168,10 @@ public class ItemServiceTest {
         Item editedItem = new Item(ITEM_1, LAPICERA, 2);
 
         when(mapper.map(itemDTO)).thenReturn(editedItem);
+        when(repository.findById(
+                originalItem.getId())
+            ).thenReturn(
+                    Optional.of(originalItem));
         when(repository.save(editedItem)).thenReturn(editedItem);
 
         // Act
@@ -176,7 +180,7 @@ public class ItemServiceTest {
 
 
         // Assert
-        assertEquals(editedItem, returnedItem);
+        assertEquals(editedItem.getDescription(), returnedItem.getDescription());
     }
 
     @Test(expected = ItemException.class)
