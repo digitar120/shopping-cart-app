@@ -22,6 +22,9 @@ public class ItemController {
         return this.itemService.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Item findById(@PathVariable Long id){ return itemService.findById(id);}
+
     @PostMapping
     public Item newItem(@RequestBody Item item){
         return itemService.saveToRepoIfNotPresent(item);
