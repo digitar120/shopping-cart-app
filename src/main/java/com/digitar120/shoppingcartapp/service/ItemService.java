@@ -1,6 +1,6 @@
 package com.digitar120.shoppingcartapp.service;
 
-import com.digitar120.shoppingcartapp.exception.ItemException;
+import com.digitar120.shoppingcartapp.exception.MyException;
 import com.digitar120.shoppingcartapp.mapper.ItemToEditedItem;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.repository.ItemRepository;
@@ -28,7 +28,7 @@ public class ItemService {
     }
 
     public Item findById(Long id){
-        return repository.findById(id).orElseThrow( () -> new ItemException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND));
+        return repository.findById(id).orElseThrow( () -> new MyException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND));
     }
 
     public Item findByDescription(String description){
@@ -46,7 +46,7 @@ public class ItemService {
         if(optionalItem.isEmpty()){
             return repository.save(item);
         } else {
-            throw new ItemException("Ya existe un elemento con ID N°" + item.getId(), HttpStatus.BAD_REQUEST);
+            throw new MyException("Ya existe un elemento con ID N°" + item.getId(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -56,7 +56,7 @@ public class ItemService {
 
         Optional<Item> optionalItem = this.repository.findById(id);
         if (optionalItem.isEmpty()) {
-            throw new ItemException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND);
+            throw new MyException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND);
         } else {
             return repository.save(item);
         }
@@ -65,7 +65,7 @@ public class ItemService {
     public void deleteById(Long id) {
         Optional<Item> optionalItem = this.repository.findById(id);
         if (optionalItem.isEmpty()) {
-            throw new ItemException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND);
+            throw new MyException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND);
         }
         repository.deleteById(id);
     }
