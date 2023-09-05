@@ -1,12 +1,11 @@
 package com.digitar120.shoppingcartapp.service;
 
-import com.digitar120.shoppingcartapp.exception.ItemException;
+import com.digitar120.shoppingcartapp.exception.MyException;
 import com.digitar120.shoppingcartapp.mapper.ItemToEditedItem;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.repository.ItemRepository;
 import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -140,14 +139,14 @@ public class ItemServiceTest {
         assertEquals(item, actualResult);
     }
 
-    @Test(expected=ItemException.class)
+    @Test(expected= MyException.class)
     @DisplayName("Test saveToRepoIfPresent throws exception if item is present")
     public void test_when_saveToRepoIfNotPresent_then_throwException(){
         // Arrange
         Item item = itemModel1;
 
         // Act
-        when(repository.save(item)).thenReturn(item).thenThrow(new ItemException("Ya existe un elemento con ID N°" + item.getId(), HttpStatus.BAD_REQUEST));
+        when(repository.save(item)).thenReturn(item).thenThrow(new MyException("Ya existe un elemento con ID N°" + item.getId(), HttpStatus.BAD_REQUEST));
 
         itemService.saveToRepoIfNotPresent(item);
             // Primera ejecución
@@ -183,7 +182,7 @@ public class ItemServiceTest {
         assertEquals(editedItem.getDescription(), returnedItem.getDescription());
     }
 
-    @Test(expected = ItemException.class)
+    @Test(expected = MyException.class)
     @DisplayName("Test deleteItem throws exception when no item")
     public void test_when_deleteItemAndNoItem_then_throwException(){
         // Arrange
