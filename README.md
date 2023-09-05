@@ -1,13 +1,8 @@
 # shopping-cart-app
 
-## Cambios del lunes 28/8
-- https://github.com/digitar120/shopping-cart-app/commit/febbc60ae171cee3495e6239458ed22cb4b4366f
-- https://github.com/digitar120/shopping-cart-app/commit/37ddf388a48fa4d09d654632911025ab3eaeffa7
-- https://github.com/digitar120/shopping-cart-app/commit/febbc60ae171cee3495e6239458ed22cb4b4366f
-- https://github.com/digitar120/shopping-cart-app/commit/affccd8140c5d5f4bef4c037aafaf99257eb7a9a
-- https://github.com/digitar120/shopping-cart-app/commit/2715e03ec6ed6f884590c46610b3867b447a4b06
-- https://github.com/digitar120/shopping-cart-app/commits/main/src/main/java/com/digitar120/shoppingcartapp/service/ItemService.java
-- https://github.com/digitar120/shopping-cart-app/commit/affccd8140c5d5f4bef4c037aafaf99257eb7a9a
-
-## Cambios del martes 29/8
- https://github.com/digitar120/shopping-cart-app/commit/48ce99f0d4839238df76634e63f16e7ab069d796
+## Cambios del lunes 4/9
+- https://github.com/digitar120/shopping-cart-app/commit/bd4e2b07445d6eeb83cc1b2ba0a18383fb9ae7e1
+- https://github.com/digitar120/shopping-cart-app/commit/8f360801efaca635692da5b6fad2b118f9d6cf8d
+- https://github.com/digitar120/shopping-cart-app/commit/47820e9c06d2417d4104554287f13f8752f92464
+- https://github.com/digitar120/shopping-cart-app/commit/a4891a2ee8f8909530f247dce64fb9acd204bf64
+- https://github.com/digitar120/shopping-cart-app/commit/28ac4dd258a35b2ab1db7ceb3d3983f72cfcf2bd
