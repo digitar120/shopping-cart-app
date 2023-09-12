@@ -18,19 +18,14 @@ public class Item {
     @Column(name = "ITEM_ID")
     private Long id;
 
-    @Column(name="ITEM_DESCRIPTION")
-    private String description;
-
     @Column(name = "ITEM_QUANTITY")
     private Integer quantity;
-
-    // Constructor con ID automático
-    public Item (String description, Integer quantity){
-        this.description = description;
-        this.quantity = quantity;
-    }
 
     @ManyToOne
     @JoinColumn(name = "CART_ID", nullable = false)
     private Cart cart;
+
+    @OneToOne
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product referencedProduct;
 }

@@ -31,9 +31,6 @@ public class ItemService {
         return repository.findById(id).orElseThrow( () -> new MyException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND));
     }
 
-    public Item findByDescription(String description){
-        return repository.findByDescription(description);
-    }
 
     public Item saveToRepo(Item item){
         return repository.save(item);
