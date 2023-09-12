@@ -28,4 +28,10 @@ public class Item {
     @OneToOne
     @JoinColumn(name = "PRODUCT_ID")
     private Product referencedProduct;
+
+    public Item(Integer quantity, Cart cart, Product referencedProduct) {
+        this.quantity = quantity;
+        this.cart = cart;
+        this.referencedProduct = referencedProduct;
+    }
 }
