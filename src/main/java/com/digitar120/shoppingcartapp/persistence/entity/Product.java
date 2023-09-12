@@ -15,4 +15,8 @@ public class Product {
     private Long id;
     @Column(name="PRODUCT_DESCRIPTION")
     private String description;
+
+    public Product(String description) {
+        this.description = description;
+    }
 }
