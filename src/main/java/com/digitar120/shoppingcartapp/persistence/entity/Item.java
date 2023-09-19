@@ -1,17 +1,23 @@
 package com.digitar120.shoppingcartapp.persistence.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "item")
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +27,18 @@ public class Item {
     @Column(name = "ITEM_QUANTITY")
     private Integer quantity;
 
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CART_ID", nullable = false)
-    private Cart cart;
+    private Cart owningCart;
 
     @OneToOne
     @JoinColumn(name = "PRODUCT_ID")
     private Product referencedProduct;
 
-    public Item(Integer quantity, Cart cart, Product referencedProduct) {
+    public Item(Integer quantity, Cart owningCart, Product referencedProduct) {
         this.quantity = quantity;
-        this.cart = cart;
+        this.owningCart = owningCart;
         this.referencedProduct = referencedProduct;
     }
 }

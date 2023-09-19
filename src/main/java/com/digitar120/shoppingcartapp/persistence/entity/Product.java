@@ -1,12 +1,16 @@
 package com.digitar120.shoppingcartapp.persistence.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "PRODUCT")
-@Data
+@Setter
+@Getter
+@ToString
+@RequiredArgsConstructor
+@NoArgsConstructor // org.hibernate.InstantiationException: No default constructor for entity
 public class Product {
 
     @Id
