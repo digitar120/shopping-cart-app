@@ -1,9 +1,11 @@
 package com.digitar120.shoppingcartapp.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class NewCartDTO {
     private String description;
