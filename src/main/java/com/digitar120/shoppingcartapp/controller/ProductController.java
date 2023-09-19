@@ -30,14 +30,17 @@ public class ProductController {
 
 
     // Agregar
-    @PostMapping
+    @PostMapping("/{description}")
     public Product newProduct(@PathVariable String description){
         return productService.newProduct(description);
     }
 
     // Eliminar
-    @DeleteMapping
-    public void deleteProduct(Long id){
+    @DeleteMapping("/{id}")
+    public String deleteProduct(@PathVariable Long id){
+        Product product = productService.findById(id);
         productService.deleteProduct(id);
+
+        return "Producto ID " + product.getId() + " \"" + product.getDescription() + "\" eliminado.";
     }
 }
