@@ -16,8 +16,6 @@ public class CartDTOtoCart implements IMapper<NewCartDTO, Cart>{
     public Cart map(NewCartDTO in){
         Cart cart = new Cart();
         cart.setDescription(in.getDescription());
-        cart.setItems(new HashSet<>());
-
         return cart;
     }
 }
