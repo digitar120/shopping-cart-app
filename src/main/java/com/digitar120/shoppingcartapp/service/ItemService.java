@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,7 @@ public class ItemService {
         }
     }
 
+    @Transactional
     public Item editItem(EditedItemDTO edited_item_fields, Long id){
         Item item = mapper.map(edited_item_fields);
         item.setId(id);
@@ -59,6 +61,7 @@ public class ItemService {
         }
     }
 
+    @Transactional
     public void deleteById(Long id) {
         Optional<Item> optionalItem = this.repository.findById(id);
         if (optionalItem.isEmpty()) {
