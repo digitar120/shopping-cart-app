@@ -41,4 +41,13 @@ public class Item {
         this.owningCart = owningCart;
         this.referencedProduct = referencedProduct;
     }
+
+    public Item(Long id, Cart owningCart) {
+        this.id = id;
+        this.owningCart = owningCart;
+    }
+
+    public Item(Long id) {
+        this.id = id;
+    }
 }
