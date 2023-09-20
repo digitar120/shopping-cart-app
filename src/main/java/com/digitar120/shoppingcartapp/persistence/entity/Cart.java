@@ -29,6 +29,8 @@ public class Cart {
     private String description;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "owningCart", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owningCart", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+        // orphanremoval: al eliminar un ítem desde el controlador de carritos, se devuelve un resultado correcto pero
+        // no se propaga el resultado a la base de datos.
     private Set<Item> items = new HashSet<>();
 }
