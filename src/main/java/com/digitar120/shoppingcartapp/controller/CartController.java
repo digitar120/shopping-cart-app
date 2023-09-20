@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/carts")
+@RequestMapping("/cart")
 public class CartController {
 
     private final CartService service;
@@ -31,7 +31,7 @@ public class CartController {
     }
 
     // Listar contenidos por id
-    @GetMapping("/{id}/items")
+    @GetMapping("/{id}/item")
     public Set<Item> getCartItems (@PathVariable Long id){
         return service.getContent(id);
     }
@@ -43,7 +43,17 @@ public class CartController {
     }
 
     // Agregar elementos
+    @PostMapping("/{cart_id}/product/{product_id}/quantity/{quantity}") // Cantidad mediante RequestBody
+    public Cart addItemToCart(@PathVariable Long cart_id, @PathVariable Long product_id, @PathVariable Integer quantity){
+        return service.addItemToCart(cart_id, product_id, quantity);
+    }
+
     // Eliminar elementos
+    @DeleteMapping("/{cartId}/item/{itemId}")
+    public Cart deleteItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId){
+        return service.deleteItemFromCart(cartId, itemId);
+    }
+
     // Eliminar carrito
 
 }
