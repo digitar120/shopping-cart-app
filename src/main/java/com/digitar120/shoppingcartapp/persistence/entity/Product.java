@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Setter
 @Getter
 @ToString
-@RequiredArgsConstructor
 @NoArgsConstructor // org.hibernate.InstantiationException: No default constructor for entity
 public class Product {
 
@@ -23,4 +22,7 @@ public class Product {
     public Product(String description) {
         this.description = description;
     }
+
+    public Product(Long id){ this.id = id;}
+        // Para poder agregar un ítem a un carrito simplemente mediante el ID, y no con un objeto entero
 }
