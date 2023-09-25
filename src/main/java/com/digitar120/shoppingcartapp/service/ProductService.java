@@ -35,12 +35,22 @@ public class ProductService {
 
     // Agregar
     public Product newProduct(String description){
-        Product product = new Product(description);
-        return productRepository.save(product);
+        if(this.findByDescription(description).isEmpty()){
+            Product product = new Product(description);
+            return productRepository.save(product);
+        } else {
+            throw new MyException("Ya existe un producto \"" + description + "\".", HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     // Eliminar
     public void deleteProduct(Long id){
-        productRepository.deleteById(id);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()){
+            throw new MyException("No se encontró el producto de ID " + id, HttpStatus.NOT_FOUND);
+        } else {
+            productRepository.deleteById(id);
+        }
     }
 }
