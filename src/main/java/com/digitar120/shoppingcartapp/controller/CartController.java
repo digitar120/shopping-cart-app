@@ -11,6 +11,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/cart")
+@SuppressWarnings("never used")
 public class CartController {
 
     private final CartService service;
@@ -43,7 +44,7 @@ public class CartController {
     }
 
     // Agregar elementos
-    @PostMapping("/{cart_id}/product/{product_id}/quantity/{quantity}") // Cantidad mediante RequestBody
+    @PostMapping("/{cart_id}/product/{product_id}/quantity/{quantity}")
     public Cart addItemToCart(@PathVariable Long cart_id, @PathVariable Long product_id, @PathVariable Integer quantity){
         return service.addItemToCart(cart_id, product_id, quantity);
     }
@@ -55,5 +56,8 @@ public class CartController {
     }
 
     // Eliminar carrito
-
+    @DeleteMapping("/{cartId}")
+    public void deleteCart(@PathVariable Long cartId){
+        service.deleteCart(cartId);
+    }
 }
