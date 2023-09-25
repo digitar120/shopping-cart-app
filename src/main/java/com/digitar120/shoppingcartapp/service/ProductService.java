@@ -6,6 +6,7 @@ import com.digitar120.shoppingcartapp.persistence.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ public class ProductService {
     }
 
     // Eliminar
+    @Transactional
     public void deleteProduct(Long id){
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()){
