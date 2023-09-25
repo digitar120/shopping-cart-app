@@ -24,20 +24,22 @@ public class ItemService {
         this.mapper = mapper;
     }
 
+    // Listar todos
     public List<Item> findAll(){
         return this.repository.findAll();
     }
 
+    // Buscar por id
     public Item findById(Long id){
         return repository.findById(id).orElseThrow( () -> new MyException("No se encontró un elemento con ID " + id, HttpStatus.NOT_FOUND));
     }
 
-
+    // Agregar
     public Item saveToRepo(Item item){
         return repository.save(item);
     }
 
-    // Para métodos POST
+    // Agregar, con verificación
     public Item saveToRepoIfNotPresent(Item item){
         Optional<Item> optionalItem = this.repository.findById(item.getId());
 
@@ -48,6 +50,7 @@ public class ItemService {
         }
     }
 
+    // Editar
     @Transactional
     public Item editItem(EditedItemDTO edited_item_fields, Long id){
         Item item = mapper.map(edited_item_fields);
@@ -61,6 +64,7 @@ public class ItemService {
         }
     }
 
+    // Eliminar
     @Transactional
     public void deleteById(Long id) {
         Optional<Item> optionalItem = this.repository.findById(id);
