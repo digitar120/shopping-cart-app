@@ -54,7 +54,6 @@ public class CartService {
     }
 
     // Agregar elementos a un carrito
-    // Trabajar el tema alterar la cantidad de un item
     @Transactional
     public Cart addItemToCart(Long cartId, Long productId, Integer quantity){
 
@@ -107,6 +106,28 @@ public class CartService {
                     }
                 }
             }
+        }
+    }
+
+    // Agregar varios elementos a un carrito
+    @Transactional
+    public void addMultipleItemsToCart(Long cartId, Set<Item> itemSet) {
+
+        // itemSet se recibe desde un ResponseBody, que permite introducir el ID del ítem. Al ingresar un número
+        // de ítem que ya existe, la API devuelve 200, pero no se afecta la base de datos. Debe agregarse una
+        // excepción para avisar que esto ocurre.
+
+        for (Item element: itemSet){
+            if (element.getId() != null){
+                throw new MyException("Uno o más elementos ingresados incluyen un ID de ítem que no corresponde.", HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        for (Item element: itemSet){
+            this.addItemToCart(
+                    cartId,
+                    element.getReferencedProduct().getId(),
+                    element.getQuantity());
         }
     }
 

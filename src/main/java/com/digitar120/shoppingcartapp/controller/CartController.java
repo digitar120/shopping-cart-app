@@ -43,10 +43,16 @@ public class CartController {
         return service.newCart(newCartDTO);
     }
 
-    // Agregar elementos
+    // Agregar elemento
     @PostMapping("/{cart_id}/product/{product_id}/quantity/{quantity}")
     public Cart addItemToCart(@PathVariable Long cart_id, @PathVariable Long product_id, @PathVariable Integer quantity){
         return service.addItemToCart(cart_id, product_id, quantity);
+    }
+
+    // Agregar varios elementos
+    @PostMapping("/{cartId}")
+    public void addMultipleItemsToCart(@PathVariable Long cartId, @RequestBody Set<Item> itemSet){
+        service.addMultipleItemsToCart(cartId, itemSet);
     }
 
     // Eliminar elementos
