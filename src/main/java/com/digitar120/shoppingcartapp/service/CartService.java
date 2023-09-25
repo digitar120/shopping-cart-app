@@ -111,6 +111,7 @@ public class CartService {
     }
 
     // Eliminar elementos de un carrito
+    @Transactional
     public Cart deleteItemFromCart(Long cartId, Long itemId){
 
         // Verificar que el carrito especificado existe
@@ -140,6 +141,7 @@ public class CartService {
     }
 
     // Eliminar un carrito
+    @Transactional
     public void deleteCart(Long id){
         Optional<Cart> optionalCart = repository.findById(id);
         if (optionalCart.isEmpty()){
