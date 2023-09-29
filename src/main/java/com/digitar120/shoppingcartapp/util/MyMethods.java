@@ -1,7 +1,6 @@
 package com.digitar120.shoppingcartapp.util;
 
 import com.digitar120.shoppingcartapp.exception.MyException;
-import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 
@@ -9,6 +8,9 @@ import java.util.Optional;
 
 
 public final class MyMethods {
+    public static final String NO_ENCONTRADO = "No encontrado";
+
+
     // https://stackoverflow.com/questions/25223553/how-can-i-create-an-utility-class
     // El nombre de la clase de utilidad debería ser genérico, para métodos en general, o específico, para un grupo
     // específico de utilidades.
@@ -41,7 +43,7 @@ public final class MyMethods {
 
     // Entonces se puede usar cualquier interfase de repositorio JpaRepository, indexado mediante cualquier tipo de
     // dato.
-    public static <T,S extends JpaRepository<T,U>, U> Boolean verifyExistence(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
+    public static <T,S extends JpaRepository<T,U>, U> void verifyElementExists(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
 
         // El método findById(N) devuelve un Optional del tipo T. Por ejemplo, productRepository.findById(productId) va
         // a devolver un elemento de tipo Optional<Product>.
@@ -50,17 +52,42 @@ public final class MyMethods {
         // Si se encuentra un elemento, el objeto optionalElement va a efectivamente contener un objeto Product,
         // fallando la siguiente condición, en otras palabras declarando que efectivamente se encontró un
         // elemento único.
-        if(optionalElement.isEmpty()){
+        if(optionalElement.isEmpty()) {
 
             // En caso de no ser así, se debe arrojar una excepción correspondiente. Por ejemplo: cuando no se encuentra
             // un elemento, se puede devolver "No se encontró el elemento N° 1", junto con 404 (HttpStatus.NOT_FOUND).
             // Si se quiere agregar un elemento y este ya existe, se puede devolver "El elemento ya existe", y 400
             // (bad request)
             throw new MyException(exceptionMessage, httpStatusCode);
-        } else {
+        }
+    }
 
-            // Si todo está bien, se devuelve true para proceder con el elemento encontrado.
-            return true;
+    //-----------------------------------------------------------------------------------------------------------------
+
+
+    // Verificar que un elemento existe, y devolver ése elemento.
+
+    // En CartService -> deleteItemFromCart, se tiene que verificar que el elemento existe, pero a diferencia de en
+    // una eliminación o una edición, se tiene que usar el elemento.
+
+    public static <T,S extends JpaRepository<T,U>, U> T verifyElementExistsAndReturn(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
+        Optional<T> optionalElement = repository.findById(id);
+
+        if(optionalElement.isEmpty()) {
+            throw new MyException(exceptionMessage, httpStatusCode);
+        }
+
+        return optionalElement.get();
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------
+
+    // Verificar que un elemento NO existe.
+    public static <T,S extends JpaRepository<T,U>, U> void verifyElementNotExists(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
+        Optional<T> optionalElement = repository.findById(id);
+
+        if(optionalElement.isPresent()) {
+            throw new MyException(exceptionMessage, httpStatusCode);
         }
     }
 }
