@@ -26,3 +26,7 @@ spring:
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
+
+controller:
+  item:
+    enabled: false

@@ -3,12 +3,14 @@ package com.digitar120.shoppingcartapp.controller;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.service.ItemService;
 import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/items")
+@ConditionalOnExpression("${controller.item.enabled:false}")
 public class ItemController {
 
     private final ItemService itemService;
