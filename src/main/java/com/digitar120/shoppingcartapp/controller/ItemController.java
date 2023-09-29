@@ -1,6 +1,5 @@
 package com.digitar120.shoppingcartapp.controller;
 
-import com.digitar120.shoppingcartapp.exception.ItemNotFoundException;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.service.ItemService;
 import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
@@ -27,7 +26,12 @@ public class ItemController {
 
     @PostMapping
     public Item newItem(@RequestBody Item item){
-        return itemService.saveToRepoIfNotPresent(item);
+        return itemService.saveToRepo(item);
+    }
+
+    @PostMapping("/cart/{cartId}/product/{productId}/quantity/{quantity}")
+    public Item newItem(@PathVariable Long cartId, @PathVariable Long productId, @PathVariable Integer quantity){
+        return itemService.newItem(cartId, productId, quantity);
     }
 
     @PutMapping("/{id}")
