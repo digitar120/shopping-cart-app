@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
+
+import static com.digitar120.shoppingcartapp.util.MyMethods.verifyElementExists;
+import static com.digitar120.shoppingcartapp.util.MyMethods.verifyElementExistsAndReturn;
 
 @Service
 public class ProductService {
@@ -29,16 +31,16 @@ public class ProductService {
         return productRepository.findByDescription(description);
     }
 
+
     // Buscar por id
     public Product findById(Long id){
-        return productRepository.findById(id).orElseThrow(() -> new MyException("No se encontró el producto de ID " + id, HttpStatus.NOT_FOUND));
+        return verifyElementExistsAndReturn(productRepository, id, "No se encontró el producto de ID " + id, HttpStatus.NOT_FOUND);
     }
 
     // Agregar
     public Product newProduct(String description){
         if(this.findByDescription(description).isEmpty()){
-            Product product = new Product(description);
-            return productRepository.save(product);
+            return productRepository.save(new Product(description));
         } else {
             throw new MyException("Ya existe un producto \"" + description + "\".", HttpStatus.BAD_REQUEST);
         }
@@ -48,11 +50,7 @@ public class ProductService {
     // Eliminar
     @Transactional
     public void deleteProduct(Long id){
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()){
-            throw new MyException("No se encontró el producto de ID " + id, HttpStatus.NOT_FOUND);
-        } else {
-            productRepository.deleteById(id);
-        }
+        verifyElementExists(productRepository, id, "No se encontró el producto N°" + id, HttpStatus.NOT_FOUND);
+        productRepository.deleteById(id);
     }
 }
