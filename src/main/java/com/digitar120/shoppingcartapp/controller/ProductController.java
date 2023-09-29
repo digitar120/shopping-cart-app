@@ -22,12 +22,17 @@ public class ProductController {
         return productService.listAllProducts();
     }
 
+    // Buscar por ID
+    @GetMapping("/{productId}")
+    public Product findById(@PathVariable Long productId){
+        return productService.findById(productId);
+    }
+
     // Encontrar por descripción
     @GetMapping("/{description}")
     public List<Product> findByDescription(@PathVariable String description){
         return productService.findByDescription(description);
     }
-
 
     // Agregar
     @PostMapping("/{description}")
@@ -37,10 +42,7 @@ public class ProductController {
 
     // Eliminar
     @DeleteMapping("/{id}")
-    public String deleteProduct(@PathVariable Long id){
-        Product product = productService.findById(id);
+    public void deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
-
-        return "Producto ID " + product.getId() + " \"" + product.getDescription() + "\" eliminado.";
     }
 }
