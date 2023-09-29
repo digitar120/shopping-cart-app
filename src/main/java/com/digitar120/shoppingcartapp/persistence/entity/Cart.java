@@ -33,4 +33,8 @@ public class Cart {
         // orphanremoval: al eliminar un ítem desde el controlador de carritos, se devuelve un resultado correcto pero
         // no se propaga el resultado a la base de datos.
     private Set<Item> items = new HashSet<>();
+
+    public Cart(Long id){
+        this.id = id;
+    }
 }
