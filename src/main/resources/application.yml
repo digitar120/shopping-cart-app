@@ -1,5 +1,5 @@
 server:
-  port: 9999
+  port: 0
 
 spring:
   output:
@@ -30,3 +30,7 @@ spring:
 controller:
   item:
     enabled: false
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
