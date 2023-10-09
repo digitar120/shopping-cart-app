@@ -50,7 +50,7 @@ public class CartService {
         return repository.save(newCart);
     }
 
-    // Agregar elementos a un carrito
+    // Agregar elemento a un carrito
     @Transactional
     public Cart addItemToCart(Long cartId, Long productId, Integer quantity){
 
