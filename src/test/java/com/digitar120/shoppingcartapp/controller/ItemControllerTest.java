@@ -1,20 +1,15 @@
 package com.digitar120.shoppingcartapp.controller;
 
-import com.digitar120.shoppingcartapp.mapper.ItemToEditedItem;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
-import com.digitar120.shoppingcartapp.persistence.repository.ItemRepository;
 import com.digitar120.shoppingcartapp.service.ItemService;
 import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,14 +50,14 @@ public class ItemControllerTest {
         Item item = itemModel1;
         List<Item> itemList = itemListModel;
 
-        when(itemService.saveToRepoIfNotPresent(item)).thenReturn(item);
+        when(itemService.saveToRepo(item)).thenReturn(item);
 
         // Act
         itemController.newItem(item);
         List<Item> actualResult = itemController.findAll();
 
         // Assert
-        verify(itemService, times(1)).saveToRepoIfNotPresent(item);
+        verify(itemService, times(1)).saveToRepo(item);
     }
 
     @Test

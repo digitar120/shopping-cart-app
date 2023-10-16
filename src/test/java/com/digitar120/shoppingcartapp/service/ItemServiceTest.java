@@ -2,9 +2,11 @@ package com.digitar120.shoppingcartapp.service;
 
 import com.digitar120.shoppingcartapp.exception.MyException;
 import com.digitar120.shoppingcartapp.mapper.ItemToEditedItem;
+import com.digitar120.shoppingcartapp.persistence.entity.Cart;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.repository.ItemRepository;
 import com.digitar120.shoppingcartapp.service.dto.EditedItemDTO;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
@@ -13,9 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,8 +25,12 @@ public class ItemServiceTest {
 
     public static final String LAPIZ = "Lápiz";
     public static final String LAPICERA = "Lapicera";
+    public Set<Item> cartItems = new HashSet<Item>();
+    public Cart cart = new Cart();
+
     public static final Long ITEM_1 = 1L;
     public static final Long ITEM_2 = 2L;
+
 
     Item itemModel1 = new Item(ITEM_1, LAPIZ, 1);
     Item itemModel2 = new Item(ITEM_2, LAPICERA, 2);
@@ -42,6 +46,11 @@ public class ItemServiceTest {
 
     @Mock
     private ItemToEditedItem mapper;
+
+    @Before
+    public void setup(){
+        cartItems.add(LAPIZ);
+    }
 
     @Test
     @DisplayName("Test findAll not empty OK")
@@ -133,7 +142,7 @@ public class ItemServiceTest {
 
         // Act
         when(repository.save(item)).thenReturn(item);
-        Item actualResult = itemService.saveToRepoIfNotPresent(item);
+        Item actualResult = itemService.saveToRepo(item);
 
         // Assert
         assertEquals(item, actualResult);
@@ -148,10 +157,10 @@ public class ItemServiceTest {
         // Act
         when(repository.save(item)).thenReturn(item).thenThrow(new MyException("Ya existe un elemento con ID N°" + item.getId(), HttpStatus.BAD_REQUEST));
 
-        itemService.saveToRepoIfNotPresent(item);
+        itemService.saveToRepo(item);
             // Primera ejecución
 
-        Object actualResult = itemService.saveToRepoIfNotPresent(item);
+        Object actualResult = itemService.saveToRepo(item);
             // Segunda ejecución
 
         // Assert
