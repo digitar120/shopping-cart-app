@@ -13,7 +13,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: a
     password: a
-    url: "jdbc:h2:mem:todoapp;DB_CLOSE_ON_EXIT=false"
+    url: "jdbc:h2:mem:shoppingcartapp;DB_CLOSE_ON_EXIT=false"
 
   h2:
     console:

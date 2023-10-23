@@ -72,7 +72,7 @@ public class CartService {
         try {
             userServiceConnection.getUserByUserId(cartDTO.getUserId());
         } catch (Exception e){
-            throw new MyException("No existe un carrito asignado a ése usuario.", HttpStatus.NOT_FOUND);
+            throw new MyException("El usuario no existe.", HttpStatus.NOT_FOUND);
         }
 
         return repository.save(newCart);
