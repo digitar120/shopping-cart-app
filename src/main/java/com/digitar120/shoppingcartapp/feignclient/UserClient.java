@@ -20,5 +20,5 @@ public interface UserClient {
     public List<UserResponse> getAllUsers();
 
     @GetMapping("/{id}")
-    public UserResponse getAddressByEmployeeId(@PathVariable("id") Integer id);
+    public UserResponse getUserByUserId(@PathVariable("id") Integer id);
 }
