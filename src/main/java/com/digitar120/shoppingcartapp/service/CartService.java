@@ -1,6 +1,7 @@
 package com.digitar120.shoppingcartapp.service;
 
 import com.digitar120.shoppingcartapp.exception.MyException;
+import com.digitar120.shoppingcartapp.feignclient.UserClient;
 import com.digitar120.shoppingcartapp.mapper.CartDTOtoCart;
 import com.digitar120.shoppingcartapp.persistence.entity.Cart;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
@@ -17,15 +18,19 @@ import java.util.Set;
 
 import static com.digitar120.shoppingcartapp.util.MyMethods.*;
 
+
 @Service
 public class CartService {
 
     private final CartRepository repository;
     private final CartDTOtoCart mapper;
+    private final UserClient userServiceConnection;
 
-    public CartService(CartRepository repository, CartDTOtoCart mapper) {
+
+    public CartService(CartRepository repository, CartDTOtoCart mapper, UserClient userServiceConnection) {
         this.repository = repository;
         this.mapper = mapper;
+        this.userServiceConnection = userServiceConnection;
     }
 
 
@@ -39,6 +44,22 @@ public class CartService {
         return verifyElementExistsAndReturn(repository, id, "No se encontró el ítem de ID " + id, HttpStatus.NOT_FOUND);
     }
 
+    // Encontrar carrito mediante ID de usuario
+    public Cart findByUserId(Integer userId){
+        try {
+          userServiceConnection.getUserByUserId(userId);
+        } catch (Exception e){
+            throw new MyException("El usuario ingresado no existe.", HttpStatus.NOT_FOUND);
+        }
+
+        Optional<Cart> optionalCart = repository.findByUserId(userId);
+        if (optionalCart.isEmpty()){
+            throw new MyException("No existe un carrito asignado a ése usuario.", HttpStatus.NOT_FOUND);
+        }
+
+        return optionalCart.get();
+    }
+
     // Listar contenidos de un carrito
     public Set<Item> getContent(Long id){
         return findById(id).getItems();
@@ -47,6 +68,13 @@ public class CartService {
     // Crear nuevo carrito
     public Cart newCart(NewCartDTO cartDTO){
         Cart newCart = mapper.map(cartDTO);
+
+        try {
+            userServiceConnection.getUserByUserId(cartDTO.getUserId());
+        } catch (Exception e){
+            throw new MyException("No existe un carrito asignado a ése usuario.", HttpStatus.NOT_FOUND);
+        }
+
         return repository.save(newCart);
     }
 
@@ -154,5 +182,15 @@ public class CartService {
     public void deleteCart(Long id){
         verifyElementExists(repository, id, "No se encontró el carrito N° " + id, HttpStatus.NOT_FOUND);
         repository.deleteById(id);
+    }
+
+    // Eliminar carrito mediante ID de usuario
+    @Transactional
+    public void deleteCartByUserId(Integer userId){
+        Optional<Cart> optionalCart = repository.findByUserId(userId);
+        if (optionalCart.isEmpty()){
+            throw new MyException("No se encontró un carrito con ése ID de usuario.", HttpStatus.NOT_FOUND);
+        }
+        repository.deleteById(optionalCart.get().getId());
     }
 }

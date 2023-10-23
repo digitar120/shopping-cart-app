@@ -1,4 +1,5 @@
-INSERT INTO CART VALUES (1, 'Carrito 1');
+-- CART_ID, CART_DESCRIPTION, USER_ID
+INSERT INTO CART VALUES (1, 'Carrito 1', 36693120);
 
 insert into product values (1, 'Lápiz');
 insert into product values (2, 'Lapicera');

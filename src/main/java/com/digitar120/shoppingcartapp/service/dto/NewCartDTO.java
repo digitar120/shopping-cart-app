@@ -9,4 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class NewCartDTO {
     private String description;
+    private Integer userId;
 }

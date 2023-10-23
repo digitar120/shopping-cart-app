@@ -48,6 +48,17 @@ public class CartController {
         return service.findById(id);
     }
 
+    // Encontrar mediante ID de usuario
+    @Operation(summary = "Encontrar mediante ID de usuario", description = "Devuelve un objeto carrito mediante ID de usuario.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Completado correctamente."),
+            @ApiResponse(code=404, message = "No se encontró al usuario o al carrito.")
+    })
+    @GetMapping("/cart/by-userid/{userId}")
+    public Cart findByUserId(@PathVariable Integer userId){
+        return service.findByUserId(userId);
+    }
+
     // Listar contenidos por id
     @Operation(summary = "Contenidos de un carrito.", description = "Listar contenidos de un carrito, mediante ID.")
     @ApiResponses(value = {
