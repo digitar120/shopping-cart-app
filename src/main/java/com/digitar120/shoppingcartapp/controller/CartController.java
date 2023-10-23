@@ -54,7 +54,7 @@ public class CartController {
             @ApiResponse(code = 200, message = "Completado correctamente."),
             @ApiResponse(code=404, message = "No se encontró al usuario o al carrito.")
     })
-    @GetMapping("/cart/by-userid/{userId}")
+    @GetMapping("/by-userid/{userId}")
     public Cart findByUserId(@PathVariable Integer userId){
         return service.findByUserId(userId);
     }
