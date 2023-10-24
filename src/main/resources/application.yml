@@ -5,3 +5,12 @@ spring:
   cloud:
     config:
       profile: dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+    refresh:
+      enabled: true

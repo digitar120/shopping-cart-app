@@ -1,4 +1,24 @@
 spring:
+  application:
+    name: shopping-cart-app
+
   cloud:
     config:
       uri: http://localhost:8888
+      profile: dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+    refresh:
+      enabled: true
+
+  security:
+    enabled: false
+
+security:
+  basic:
+    enabled: false

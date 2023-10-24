@@ -7,12 +7,14 @@ import com.digitar120.shoppingcartapp.service.dto.NewCartDTO;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
 
 @RestController
+@RefreshScope
 @RequestMapping("/cart")
 @SuppressWarnings("never used")
 public class CartController {
