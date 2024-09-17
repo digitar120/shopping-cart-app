@@ -2,14 +2,17 @@ package com.digitar120.shoppingcartapp.service;
 
 import com.digitar120.shoppingcartapp.exception.MyException;
 import com.digitar120.shoppingcartapp.feignclient.UserClient;
+import com.digitar120.shoppingcartapp.feignclient.response.UserResponse;
 import com.digitar120.shoppingcartapp.mapper.CartDTOtoCart;
 import com.digitar120.shoppingcartapp.persistence.entity.Cart;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.entity.Product;
 import com.digitar120.shoppingcartapp.persistence.repository.CartRepository;
 import com.digitar120.shoppingcartapp.service.dto.NewCartDTO;
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -45,16 +48,17 @@ public class CartService {
     }
 
     // Encontrar carrito mediante ID de usuario
+    // TODO: Método principal a aplicar CircuitBreaker
     public Cart findByUserId(Integer userId){
-        try {
-          userServiceConnection.getUserByUserId(userId);
-        } catch (Exception e){
-            throw new MyException("El usuario ingresado no existe.", HttpStatus.NOT_FOUND);
-        }
 
+        Optional<UserResponse> userResponse = Optional.of(userServiceConnection.getUserByUserId(userId));
         Optional<Cart> optionalCart = repository.findByUserId(userId);
-        if (optionalCart.isEmpty()){
-            throw new MyException("No existe un carrito asignado a ése usuario.", HttpStatus.NOT_FOUND);
+
+        if (userResponse.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El usuario no existe.");
+        } else if (optionalCart.isEmpty()){
+            //throw new MyException("No existe un carrito asignado a ése usuario.", HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe un carrito asignado a ése usuario.");
         }
 
         return optionalCart.get();
