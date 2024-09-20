@@ -48,10 +48,7 @@ public class CartService {
     }
 
     // Encontrar carrito mediante ID de usuario
-    // TODO: Método principal a aplicar CircuitBreaker
     public Cart findByUserId(Integer userId){
-
-        Optional<UserResponse> userResponse = Optional.of(userServiceConnection.getUserByUserId(userId));
         Optional<Cart> optionalCart = repository.findByUserId(userId);
 
         // En la clase UserFeignClientFallback se define que se devuelve un usuario con userId=-1 si la llamada falla.
