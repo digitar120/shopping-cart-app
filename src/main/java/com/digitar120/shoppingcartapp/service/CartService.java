@@ -54,10 +54,11 @@ public class CartService {
         Optional<UserResponse> userResponse = Optional.of(userServiceConnection.getUserByUserId(userId));
         Optional<Cart> optionalCart = repository.findByUserId(userId);
 
-        if (userResponse.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El usuario no existe.");
+        // En la clase UserFeignClientFallback se define que se devuelve un usuario con userId=-1 si la llamada falla.
+        if (userServiceConnection.getUserByUserId(userId).getId() == -1){
+            System.out.println("FEIGN: FALLA AL LLAMAR A USUARIOS");
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error interno. No se pudo verificar que el usuario existe. Intente más tarde.");
         } else if (optionalCart.isEmpty()){
-            //throw new MyException("No existe un carrito asignado a ése usuario.", HttpStatus.NOT_FOUND);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe un carrito asignado a ése usuario.");
         }
 
