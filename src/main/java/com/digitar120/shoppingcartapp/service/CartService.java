@@ -1,6 +1,7 @@
 package com.digitar120.shoppingcartapp.service;
 
-import com.digitar120.shoppingcartapp.exception.MyException;
+import com.digitar120.shoppingcartapp.exception.globalhandler.BadRequestException;
+import com.digitar120.shoppingcartapp.exception.globalhandler.NotFoundException;
 import com.digitar120.shoppingcartapp.feignclient.UserClient;
 import com.digitar120.shoppingcartapp.feignclient.response.UserResponse;
 import com.digitar120.shoppingcartapp.mapper.CartDTOtoCart;
@@ -74,7 +75,7 @@ public class CartService {
         try {
             userServiceConnection.getUserByUserId(cartDTO.getUserId());
         } catch (Exception e){
-            throw new MyException("El usuario no existe.", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("El usuario no existe.");
         }
 
         return repository.save(newCart);
@@ -86,7 +87,7 @@ public class CartService {
 
         // Verificar que el valor de cantidad sea válido
         if(quantity <= 0){
-            throw new MyException("La cantidad ingresada es inválida.", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("La cantidad ingresada es inválida.");
         }
 
         // Adquirir el carrito, verificando que existe mediante findById()
@@ -126,7 +127,7 @@ public class CartService {
                 ));
                 return repository.save(cart);
             } catch (Exception e) {
-                throw new MyException("No se encontró el producto N°" + productId, HttpStatus.NOT_FOUND);
+                throw new NotFoundException("No se encontró el producto N°" + productId);
             }
         }
     }
@@ -141,7 +142,7 @@ public class CartService {
 
         for (Item element: itemSet){
             if (element.getId() != null){
-                throw new MyException("Uno o más elementos ingresados incluyen un ID de ítem que no corresponde.", HttpStatus.BAD_REQUEST);
+                throw new BadRequestException("Uno o más elementos ingresados incluyen un ID de ítem que no corresponde.");
             }
         }
 
@@ -170,7 +171,7 @@ public class CartService {
         }
 
         if (matchedItem.getId() == null){
-            throw new MyException("No se encontró el ítem N°" + itemId, HttpStatus.NOT_FOUND);
+            throw new NotFoundException("No se encontró el ítem N°" + itemId);
         } else {
             cart.getItems().remove(matchedItem);
             return repository.save(cart);
@@ -191,7 +192,7 @@ public class CartService {
     public void deleteCartByUserId(Integer userId){
         Optional<Cart> optionalCart = repository.findByUserId(userId);
         if (optionalCart.isEmpty()){
-            throw new MyException("No se encontró un carrito con ése ID de usuario.", HttpStatus.NOT_FOUND);
+            throw new NotFoundException("No se encontró un carrito con ése ID de usuario.");
         }
         repository.deleteById(optionalCart.get().getId());
     }

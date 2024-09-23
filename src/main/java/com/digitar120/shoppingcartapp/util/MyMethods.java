@@ -1,6 +1,6 @@
 package com.digitar120.shoppingcartapp.util;
 
-import com.digitar120.shoppingcartapp.exception.MyException;
+import com.digitar120.shoppingcartapp.exception.globalhandler.NotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 
@@ -52,13 +52,13 @@ public final class MyMethods {
         // Si se encuentra un elemento, el objeto optionalElement va a efectivamente contener un objeto Product,
         // fallando la siguiente condición, en otras palabras declarando que efectivamente se encontró un
         // elemento único.
-        if(optionalElement.isEmpty()) {
+        if(optionalElement.isEmpty() && httpStatusCode.equals(HttpStatus.NOT_FOUND)) {
 
             // En caso de no ser así, se debe arrojar una excepción correspondiente. Por ejemplo: cuando no se encuentra
             // un elemento, se puede devolver "No se encontró el elemento N° 1", junto con 404 (HttpStatus.NOT_FOUND).
             // Si se quiere agregar un elemento y este ya existe, se puede devolver "El elemento ya existe", y 400
             // (bad request)
-            throw new MyException(exceptionMessage, httpStatusCode);
+            throw new NotFoundException(exceptionMessage);
         }
     }
 
@@ -73,8 +73,8 @@ public final class MyMethods {
     public static <T,S extends JpaRepository<T,U>, U> T verifyElementExistsAndReturn(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
         Optional<T> optionalElement = repository.findById(id);
 
-        if(optionalElement.isEmpty()) {
-            throw new MyException(exceptionMessage, httpStatusCode);
+        if(optionalElement.isEmpty() && httpStatusCode.equals(HttpStatus.NOT_FOUND)) {
+            throw new NotFoundException(exceptionMessage);
         }
 
         return optionalElement.get();
@@ -86,8 +86,8 @@ public final class MyMethods {
     public static <T,S extends JpaRepository<T,U>, U> void verifyElementNotExists(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
         Optional<T> optionalElement = repository.findById(id);
 
-        if(optionalElement.isPresent()) {
-            throw new MyException(exceptionMessage, httpStatusCode);
+        if(optionalElement.isPresent() && httpStatusCode.equals(HttpStatus.BAD_REQUEST)) {
+            throw new NotFoundException(exceptionMessage);
         }
     }
 }

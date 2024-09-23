@@ -1,6 +1,5 @@
 package com.digitar120.shoppingcartapp.service;
 
-import com.digitar120.shoppingcartapp.exception.MyException;
 import com.digitar120.shoppingcartapp.mapper.ItemToEditedItem;
 import com.digitar120.shoppingcartapp.persistence.entity.Cart;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;

@@ -1,6 +1,6 @@
 package com.digitar120.shoppingcartapp.service;
 
-import com.digitar120.shoppingcartapp.exception.MyException;
+import com.digitar120.shoppingcartapp.exception.globalhandler.BadRequestException;
 import com.digitar120.shoppingcartapp.persistence.entity.Product;
 import com.digitar120.shoppingcartapp.persistence.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
@@ -42,9 +42,8 @@ public class ProductService {
         if(this.findByDescription(description).isEmpty()){
             return productRepository.save(new Product(description));
         } else {
-            throw new MyException("Ya existe un producto \"" + description + "\".", HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Ya existe un producto \"" + description + "\".");
         }
-
     }
 
     // Eliminar
