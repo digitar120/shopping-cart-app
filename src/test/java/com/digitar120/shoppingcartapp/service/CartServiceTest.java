@@ -43,8 +43,6 @@ public class CartServiceTest {
     private final static Cart TEST_CART_2 = new Cart(2L, "Carrito 2", null, 2);
 
 
-
-
     @InjectMocks
     private CartService service;
     private CartService serviceSpy;
@@ -66,7 +64,6 @@ public class CartServiceTest {
 
         CART_1.getItems().add(new Item(1L, 5, null, new Product(1L) ));
     }
-
 
 
     private void findByIdReturnsCart() {
@@ -140,7 +137,7 @@ public class CartServiceTest {
         service.findByUserId(1);
 
         verify(repository, times(1)).findByUserId(anyInt());
-        verify(userServiceConnection, times(2)).getUserByUserId(1);
+        verify(userServiceConnection, times(1)).getUserByUserId(1);
     }
 
 
@@ -347,7 +344,7 @@ public class CartServiceTest {
     @Test
     @DisplayName("deleteCartByUserId llama para buscar y para borrar")
     public void test_when_deleteCartByUserId_then_repositorySearchAndDeletionCallsMade(){
-        findByIdReturnsCart();
+        Mockito.doReturn(Optional.of(CART_1)).when(repository).findByUserId(USERID_CART_1);
 
         service.deleteCartByUserId(USERID_CART_1);
 

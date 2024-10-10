@@ -27,19 +27,12 @@ public class ProductServiceTest {
 
     private static final String PENCIL_AMBIGUOUS = "Pencil";
     private static final String PENCIL_2B = "2B Pencil";
-    private static final String PENCIL_2H = "2H Pencil";
-
-    private static final String PEN = "Pen";
 
     private static final Long CODE_PENCIL_2B = 1L;
-    private static final Long CODE_PENCIL_2H = 2L;
-    private static final Long CODE_PEN = 3L;
 
     private static final Product PRODUCT_PENCIL_2B = new Product(CODE_PENCIL_2B, PENCIL_2B);
-    private static final Product PRODUCT_PENCIL_2H = new Product(CODE_PENCIL_2H, PENCIL_2H);
-    private static final Product PRODUCT_PEN = new Product(CODE_PEN, PEN);
 
-    private static final List<Product> sampleProductList = Arrays.asList(PRODUCT_PENCIL_2B, PRODUCT_PEN);
+    private static final List<Product> sampleProductList = Arrays.asList(PRODUCT_PENCIL_2B, new Product(3L, "Pen"));
 
     @InjectMocks
     private ProductService productService;
@@ -49,6 +42,10 @@ public class ProductServiceTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    private void repoFindByIdReturnsProduct() {
+        when(repository.findById(CODE_PENCIL_2B)).thenReturn(Optional.of(PRODUCT_PENCIL_2B));
+    }
 
 
     // listAllProducts
@@ -112,7 +109,7 @@ public class ProductServiceTest {
     @Test
     @DisplayName("findById produces repository call with given argument")
     public void test_when_findById_then_repositoryCalledWithGivenArgument(){
-        when(repository.findById(CODE_PENCIL_2B)).thenReturn(Optional.of(PRODUCT_PENCIL_2B));
+        repoFindByIdReturnsProduct();
 
         productService.findById(CODE_PENCIL_2B);
 
@@ -133,13 +130,10 @@ public class ProductServiceTest {
     @Test
     @DisplayName("findById produces correct match with given Id")
     public void test_when_findById_then_accurateMatch(){
-        when(repository.findById(CODE_PENCIL_2B)).thenReturn(Optional.of(PRODUCT_PENCIL_2B));
+        repoFindByIdReturnsProduct();
 
         assertTrue(productService.findById(CODE_PENCIL_2B).equals(PRODUCT_PENCIL_2B));
     }
-
-
-
 
     // newProduct
     @Test
@@ -147,7 +141,7 @@ public class ProductServiceTest {
     public void test_when_newProduct_then_repositoryVerificationAndSavingCallsMade(){
         Product newProduct = new Product(PENCIL_2B);
         when(repository.findByDescription(PENCIL_2B)).thenReturn(List.of());
-        when(repository.save(newProduct)).thenReturn(newProduct);
+        repoFindByIdReturnsProduct();
 
         productService.newProduct(PENCIL_2B);
 
@@ -155,12 +149,11 @@ public class ProductServiceTest {
         verify(repository, times(1)).save(any(Product.class));
     }
 
-
     @Test
     @DisplayName("newProduct returns correct object")
     public void test_when_newProduct_then_returnsCorrectObject(){
         when(repository.findByDescription(PENCIL_2B)).thenReturn(List.of());
-        when(repository.save(any(Product.class))).thenReturn(PRODUCT_PENCIL_2B);
+        repoFindByIdReturnsProduct();
 
         assertEquals(PRODUCT_PENCIL_2B, productService.newProduct(PENCIL_2B));
     }
@@ -183,7 +176,7 @@ public class ProductServiceTest {
     @Test
     @DisplayName("deleteProduct verifies if the product already exists")
     public void test_when_deleteProduct_then_verifiesIfProductAlreadyExists(){
-        when(repository.findById(CODE_PENCIL_2B)).thenReturn(Optional.of(PRODUCT_PENCIL_2B));
+        repoFindByIdReturnsProduct();
 
         productService.deleteProduct(CODE_PENCIL_2B);
 
@@ -193,7 +186,7 @@ public class ProductServiceTest {
     @Test
     @DisplayName("deleteProduct produces repository call")
     public void test_when_deleteProduct_then_repositoryCallMade(){
-        when(repository.findById(CODE_PENCIL_2B)).thenReturn(Optional.of(PRODUCT_PENCIL_2B));
+        repoFindByIdReturnsProduct();
 
         productService.deleteProduct(CODE_PENCIL_2B);
         verify(repository, times(1)).deleteById(1L);
