@@ -10,6 +10,7 @@ public class ItemToEditedItem implements IMapper<EditedItemDTO, Item>{
 
     @Override
     public Item map(EditedItemDTO in){
+        // Afecta solo cantidad del ítem. El ID se maneja en la capa de servicio.
         Item item = new Item();
         item.setQuantity(in.getQuantity());
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.digitar120.shoppingcartapp.util.MyMethods.*;
+import static com.digitar120.shoppingcartapp.util.LocalUtilityMethods.*;
 
 @Service
 public class ItemService {
@@ -51,13 +51,14 @@ public class ItemService {
     }
 
     // Editar
+    // Afecta solo cantidad del ítem
     @Transactional
     public Item editItem(EditedItemDTO edited_item_fields, Long id){
+        verifyElementExists(repository, id, "No se encontró un ítem de N°" + id, HttpStatus.NOT_FOUND);
+
         Item item = mapper.map(edited_item_fields);
         item.setId(id);
 
-        verifyElementExists(repository, id, "No se encontró un ítem de N°" + id, HttpStatus.NOT_FOUND);
-            // Contiene un throw. Si el elemento no existe, termina en éste punto.
         return repository.save(item);
     }
 

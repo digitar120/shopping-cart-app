@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class EditedItemDTO {
-    private String description;
     private Integer quantity;
 }

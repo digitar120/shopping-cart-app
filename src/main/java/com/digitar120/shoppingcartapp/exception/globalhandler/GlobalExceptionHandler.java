@@ -27,4 +27,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDTO> generateBadRequestException(BadRequestException ex){
         return buildErrorDTO(ex);
     }
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ErrorDTO> generateServiceUnavailableException(ServiceUnavailableException ex){ return buildErrorDTO(ex);}
 }

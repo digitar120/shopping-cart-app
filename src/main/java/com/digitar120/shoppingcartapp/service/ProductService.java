@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.digitar120.shoppingcartapp.util.MyMethods.verifyElementExists;
-import static com.digitar120.shoppingcartapp.util.MyMethods.verifyElementExistsAndReturn;
+import static com.digitar120.shoppingcartapp.util.LocalUtilityMethods.verifyElementExists;
+import static com.digitar120.shoppingcartapp.util.LocalUtilityMethods.verifyElementExistsAndReturn;
 
 @Service
 public class ProductService {

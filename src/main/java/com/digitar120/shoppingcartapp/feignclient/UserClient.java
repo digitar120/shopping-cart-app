@@ -13,7 +13,8 @@ import java.util.List;
         , url = "localhost:9001"
         , path = "/user"
         , configuration = UserFeignClientConfiguration.class
-        , fallback = UserFeignClientFallback.class)
+        , fallback = UserFeignClientFallback.class
+)
 public interface UserClient {
 
     @GetMapping

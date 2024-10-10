@@ -68,7 +68,7 @@ public class CartController {
             @ApiResponse(code = 404, message = "No se encontró el carrito"),
             @ApiResponse(code = 500, message = "Algo salió mal.")
     })
-    @GetMapping("/{id}/item")
+    @GetMapping("/{id}/items")
     public Set<Item> getCartItems (@PathVariable Long id){
         return service.getContent(id);
     }
@@ -93,7 +93,7 @@ public class CartController {
             @ApiResponse(code = 500, message = "Algo salió mal")
     })
     @PostMapping("/{cart_id}/product/{product_id}/quantity/{quantity}")
-    public Cart addItemToCart(@PathVariable Long cart_id, @PathVariable Long product_id, @PathVariable Integer quantity){
+    public Cart addItemToCart(@PathVariable Long cart_id, @PathVariable Long product_id, @PathVariable Integer quantity)    {
         return service.addItemToCart(cart_id, product_id, quantity);
     }
 

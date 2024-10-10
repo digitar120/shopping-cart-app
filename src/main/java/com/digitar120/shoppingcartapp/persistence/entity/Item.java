@@ -36,6 +36,7 @@ public class Item {
     @JoinColumn(name = "PRODUCT_ID")
     private Product referencedProduct;
 
+    // Guardado de ítems nuevos desde /item y /cart
     public Item(Integer quantity, Cart owningCart, Product referencedProduct) {
         this.quantity = quantity;
         this.owningCart = owningCart;

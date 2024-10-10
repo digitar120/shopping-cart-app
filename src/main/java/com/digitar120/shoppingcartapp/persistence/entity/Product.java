@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @ToString
 @NoArgsConstructor // org.hibernate.InstantiationException: No default constructor for entity
+@AllArgsConstructor // Testing
 public class Product {
 
     @Id

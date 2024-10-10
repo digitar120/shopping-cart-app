@@ -2,25 +2,24 @@ package com.digitar120.shoppingcartapp.service;
 
 import com.digitar120.shoppingcartapp.exception.globalhandler.BadRequestException;
 import com.digitar120.shoppingcartapp.exception.globalhandler.NotFoundException;
+import com.digitar120.shoppingcartapp.exception.globalhandler.ServiceUnavailableException;
 import com.digitar120.shoppingcartapp.feignclient.UserClient;
-import com.digitar120.shoppingcartapp.feignclient.response.UserResponse;
 import com.digitar120.shoppingcartapp.mapper.CartDTOtoCart;
 import com.digitar120.shoppingcartapp.persistence.entity.Cart;
 import com.digitar120.shoppingcartapp.persistence.entity.Item;
 import com.digitar120.shoppingcartapp.persistence.entity.Product;
 import com.digitar120.shoppingcartapp.persistence.repository.CartRepository;
 import com.digitar120.shoppingcartapp.service.dto.NewCartDTO;
-import feign.FeignException;
+import com.digitar120.shoppingcartapp.util.LocalUtilityMethods;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.digitar120.shoppingcartapp.util.MyMethods.*;
+import static com.digitar120.shoppingcartapp.util.LocalUtilityMethods.*;
 
 
 @Service
@@ -45,19 +44,20 @@ public class CartService {
 
     // Encontrar carrito mediante ID
     public Cart findById(Long id){
-        return verifyElementExistsAndReturn(repository, id, "No se encontró el ítem de ID " + id, HttpStatus.NOT_FOUND);
+        return verifyElementExistsAndReturn(repository, id, "No se encontró el carrito de ID " + id, HttpStatus.NOT_FOUND);
     }
 
     // Encontrar carrito mediante ID de usuario
     public Cart findByUserId(Integer userId){
         Optional<Cart> optionalCart = repository.findByUserId(userId);
 
-        // En la clase UserFeignClientFallback se define que se devuelve un usuario con userId=-1 si la llamada falla.
-        if (userServiceConnection.getUserByUserId(userId).getId() == -1){
-            System.out.println("FEIGN: FALLA AL LLAMAR A USUARIOS");
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error interno. No se pudo verificar que el usuario existe. Intente más tarde.");
-        } else if (optionalCart.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe un carrito asignado a ése usuario.");
+        if (userServiceConnection
+                .getUserByUserId(userId)
+                .getId() == -1){
+            throw new ServiceUnavailableException("Error interno. No se pudo verificar que el usuario existe. Intente más tarde.");
+
+        } else if (optionalCart.isEmpty()) {
+            throw new NotFoundException("No existe un carrito asignado a ése usuario.");
         }
 
         return optionalCart.get();
@@ -70,15 +70,7 @@ public class CartService {
 
     // Crear nuevo carrito
     public Cart newCart(NewCartDTO cartDTO){
-        Cart newCart = mapper.map(cartDTO);
-
-        try {
-            userServiceConnection.getUserByUserId(cartDTO.getUserId());
-        } catch (Exception e){
-            throw new NotFoundException("El usuario no existe.");
-        }
-
-        return repository.save(newCart);
+        return repository.save(mapper.map(cartDTO));
     }
 
     // Agregar elemento a un carrito
