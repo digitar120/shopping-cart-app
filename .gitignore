@@ -1,7 +1,3 @@
-.obsidian
-/src/test/java/resource/app.feature
-/src/test/java/*
-
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
