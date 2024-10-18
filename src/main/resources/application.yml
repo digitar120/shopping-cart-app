@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: shopping-cart-app
-
-  cloud:
-    config:
-      profile: dev

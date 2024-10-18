@@ -21,12 +21,12 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MyMethodsTest {
+public class LocalUtilityMethodsTest {
 
     public static final Optional<Product> NO_RESULT = Optional.empty();
     public static final Optional<Product> MATCH_FOUND = Optional.of(new Product());
     @InjectMocks
-    private MyMethodsTest myMethods;
+    private LocalUtilityMethodsTest myMethods;
 
     @Mock
     ProductRepository repository;

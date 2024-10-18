@@ -10,7 +10,7 @@ import java.util.List;
 
 @FeignClient(
         name = "userclient"
-        , url = "localhost:9001"
+        , url = "host.docker.internal:9001"
         , path = "/user"
         , configuration = UserFeignClientConfiguration.class
         , fallback = UserFeignClientFallback.class

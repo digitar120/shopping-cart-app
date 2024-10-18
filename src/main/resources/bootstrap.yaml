@@ -4,13 +4,9 @@ spring:
 
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: http://${CONFIG_SERVER_IP}:${CONFIG_SERVER_PORT}
       profile: dev
 
-
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+#eureka:
+#  instance:
+    #hostname: host.docker.internal
