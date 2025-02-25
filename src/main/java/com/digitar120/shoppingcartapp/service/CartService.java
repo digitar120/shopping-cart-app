@@ -11,6 +11,7 @@ import com.digitar120.shoppingcartapp.persistence.entity.Product;
 import com.digitar120.shoppingcartapp.persistence.repository.CartRepository;
 import com.digitar120.shoppingcartapp.service.dto.NewCartDTO;
 import com.digitar120.shoppingcartapp.util.LocalUtilityMethods;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,13 @@ import java.util.Set;
 
 import static com.digitar120.shoppingcartapp.util.LocalUtilityMethods.*;
 
-
+/**
+ * Business logic for the Cart endpoint.
+ * @author Gabriel Pérez (digitar120)
+ * @see Cart
+ * @see CartRepository
+ * @see UserClient
+ */
 @Service
 public class CartService {
 
@@ -29,26 +36,39 @@ public class CartService {
     private final CartDTOtoCart mapper;
     private final UserClient userServiceConnection;
 
-
     public CartService(CartRepository repository, CartDTOtoCart mapper, UserClient userServiceConnection) {
         this.repository = repository;
         this.mapper = mapper;
         this.userServiceConnection = userServiceConnection;
     }
 
-    // FIND
+    // Read methods
 
-    // Listar carritos
+    /**
+     * Returns all the Carts in the database.
+     * @return A List of Carts containing all elements.
+     */
     public List<Cart> findAll() {
         return repository.findAll();
     }
 
-    // Encontrar carrito mediante ID
+    /**
+     * Returns a single Cart that matches and ID.
+     * @param id ID to execute the search with.
+     * @return Cart object with a matching ID.
+     * @throws BadRequestException If no element matches.
+     */
     public Cart findById(Long id){
         return verifyElementExistsAndReturn(repository, id, "No se encontró el carrito de ID " + id, HttpStatus.NOT_FOUND);
     }
 
-    // Encontrar carrito mediante ID de usuario
+    /**
+     * Calls the User service to verify that an user exists, then searches and returns a Cart object matching by its {@code userId}.
+     * @param userId {@code userId} userId to execute the search with.
+     * @return A Cart with a matching {@code userId}.
+     * @throws ServiceUnavailableException If the {@code FeignClient} call fails.
+     * @throws NotFoundException If the {@code FeignClient} call succeeds but the User doesn't exist.
+     */
     public Cart findByUserId(Integer userId){
         Optional<Cart> optionalCart = repository.findByUserId(userId);
 
@@ -64,23 +84,47 @@ public class CartService {
         return optionalCart.get();
     }
 
-    // Listar contenidos de un carrito
+    /**
+     * Retrieves the Item Set of a Cart, matching by ID.
+     * <p>It reuses the {@link CartService#findById(Long)} method, so it's subject to its behavior.</p>
+     * @param id ID to execute the search with.
+     * @return A matching Cart's Item Set.
+     */
     public Set<Item> getContent(Long id){
         return findById(id).getItems();
     }
 
-    // CREATE
+    // Create methods
 
-    // Crear nuevo carrito
+    /**
+     * Creates a new Cart with a given {@link NewCartDTO}.
+     * <p>Uses a {@link CartDTOtoCart} mapper.</p>
+     * @param cartDTO A {@code NewCartDTO} object to provide basic information.
+     * @return A newly created Cart object.
+     */
     public Cart newCart(NewCartDTO cartDTO){
         return repository.save(mapper.map(cartDTO));
     }
 
+    // Update methods
 
-    // EDIT
-
-
-    // Agregar elemento a un carrito
+    /**
+     * Adds an Item with a referenced Product and a quantity to a Cart's Item Set
+     * <p>This method is a bit complex in behavior. It will check for the following:</p>
+     * <p><ul>
+     *     <li>If the quantity value is valid</li>
+     *     <li>If {@code cartId} matches any Cart (reusing {@link CartService#findById(Long)} and thus inheriting its
+     *     behavior)</li>
+     *     <li>If {@code productId} matches any referenced Products already listed in the Cart's Item Set. If positive, updates
+     *     the quantity instead. If negative, creates a new one</li>
+     * </ul></p>
+     * @param cartId The ID to match a Cart with
+     * @param productId The ID of the Product to work with
+     * @param quantity Desired quantity for the referenced Product
+     * @return An updated Cart object, containing the newly created or edited Item in its Item Set.
+     * @throws BadRequestException If the {@code quantity} equals or is below 0.
+     * @throws NotFoundException If the {@code productId} matches no Products.
+     */
     @Transactional
     public Cart addItemToCart(Long cartId, Long productId, Integer quantity){
 
@@ -131,13 +175,18 @@ public class CartService {
         }
     }
 
-    // Agregar varios elementos a un carrito
+    /**
+     *  A repeating version of {@link CartService#addItemToCart(Long, Long, Integer)}.
+     *  <p>Adds the contents of an Item Set to a Cart's Item Set, while verifying that none of the Items received
+     *  have an ID so they can be properly initialize them with {@code addItemToCart()}.</p>
+     *  <p>This is because Items with non-null IDs will not be properly loaded into the database, while the API will
+     *  still respond with HTTP 200.</p>
+     * @param cartId The ID to match a Cart with.
+     * @param itemSet An Item Set containing new Items.
+     * @throws BadRequestException If an Item on the receiveing Item Set contains an ID.
+     */
     @Transactional
     public void addMultipleItemsToCart(Long cartId, Set<Item> itemSet) {
-
-        // itemSet se recibe desde un ResponseBody, que permite introducir el ID del ítem. Al ingresar un número
-        // de ítem que ya existe, la API devuelve 200, pero no se afecta la base de datos. Debe agregarse una
-        // excepción para avisar que esto ocurre.
 
         for (Item element: itemSet){
             if (element.getId() != null){
@@ -154,9 +203,17 @@ public class CartService {
         }
     }
 
-    // DELETE
+    // Delete methods
 
-    // Eliminar elementos de un carrito
+    /**
+     * Deletes an Item from a Cart's Item Set
+     *<p>This method will verify that the Cart exists through {@link CartService#findById(Long)} (inheriting its
+     * behavior), after which it will search the itemId in the matched Cart's Item Set.</p>
+     * @param cartId The {@code cartId} to match with.
+     * @param itemId The {@code itemId} to match with.
+     * @return A copy of the updated Cart object.
+     * @throws NotFoundException If no matching Item is found.
+     */
     @Transactional
     public Cart deleteItemFromCart(Long cartId, Long itemId){
 
@@ -181,14 +238,23 @@ public class CartService {
 
     }
 
-    // Eliminar un carrito
+    /**
+     * Deletes a cart
+     * <p>Executes {@link LocalUtilityMethods#verifyElementExists(JpaRepository, Object, String, HttpStatus)} to verify
+     * that the Cart exists. If the method does not fail, executes a deletion by ID.</p>
+     * @param id ID of the Cart to delete.
+     */
     @Transactional
     public void deleteCart(Long id){
         verifyElementExists(repository, id, "No se encontró el carrito N° " + id, HttpStatus.NOT_FOUND);
         repository.deleteById(id);
     }
 
-    // Eliminar carrito mediante ID de usuario
+    /**
+     * Deletes a Cart by matching its {@code userId}.
+     * @param userId The ID to match a Cart with.
+     * @throws NotFoundException If {@code userId} matches no Carts.
+     */
     @Transactional
     public void deleteCartByUserId(Integer userId){
         Optional<Cart> optionalCart = repository.findByUserId(userId);
