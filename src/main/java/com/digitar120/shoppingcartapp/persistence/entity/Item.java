@@ -8,6 +8,16 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * This class holds a reference to a Product, an owning Cart object and a quantity value. A referenced Product is intended to be
+ * unique.
+ * <p>As cited in {@link Cart}, the JSON tools and relation rules provide a correct behavior for Cart queries on Items.</p>
+ * @author Gabriel Pérez (digitar120)
+ * @see Cart
+ * @see Item
+ * @see Product
+ */
+
 @Entity
 @Table(name = "item")
 @Getter
@@ -32,11 +42,20 @@ public class Item {
     @JoinColumn(name = "CART_ID", nullable = false)
     private Cart owningCart;
 
+    /**
+     * This field should be unique amongst the Items in the set of a Cart.
+     * @see Cart#getItems()
+     */
     @OneToOne
     @JoinColumn(name = "PRODUCT_ID")
     private Product referencedProduct;
 
-    // Guardado de ítems nuevos desde /item y /cart
+    /**
+     * This constructor is used for saving new Items from the Cart and Item endpoints.
+     * @param quantity
+     * @param owningCart
+     * @param referencedProduct
+     */
     public Item(Integer quantity, Cart owningCart, Product referencedProduct) {
         this.quantity = quantity;
         this.owningCart = owningCart;

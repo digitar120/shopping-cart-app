@@ -4,12 +4,17 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * This is a simple class to hold information about a Product's name. It is used as a reference on {@link Item}s.
+ * <p>{@code @AllArgsConstructor} is added for testing purposes.</p>
+ * @author Gabriel Pérez (digitar120)
+ */
 @Entity
 @Table(name = "PRODUCT")
 @Setter
 @Getter
 @ToString
-@NoArgsConstructor // org.hibernate.InstantiationException: No default constructor for entity
+@NoArgsConstructor
 @AllArgsConstructor // Testing
 public class Product {
 
@@ -24,6 +29,10 @@ public class Product {
         this.description = description;
     }
 
+    /**
+     * This constructor is used to easily create an Item in a Cart, by simply referencing a Product's ID and not with a
+     * manually created object.
+     * @param id
+     */
     public Product(Long id){ this.id = id;}
-        // Para poder agregar un ítem a un carrito simplemente mediante el ID, y no con un objeto entero
 }

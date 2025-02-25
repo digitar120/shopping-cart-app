@@ -17,6 +17,12 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 
+/**
+ * Outgoing authorized FeignClient calls configuration. Defines call behavior for calls to the User service.
+ * @author Gabriel Pérez (digitar120)
+ * @see com.digitar120.shoppingcartapp.service.CartService#findByUserId(Integer) 
+ */
+
 @Configuration
 public class UserFeignClientConfiguration {
 
@@ -40,6 +46,11 @@ public class UserFeignClientConfiguration {
         return authorizedClientManager;
     }
 
+    /**
+     * This bean adds a header containing an OAuth2 token to the HTTP request. The access token is preconfigured.
+     * @param manager
+     * @return
+     */
     @Bean
     public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2AuthorizedClientManager manager){
         return requestTemplate -> {
@@ -53,6 +64,10 @@ public class UserFeignClientConfiguration {
         };
     }
 
+    /**
+     * Part of the circuit breaker pattern applied to outgoing calls.
+     * @return
+     */
     @Bean
     public ErrorDecoder errorDecoder() {
         return new CustomErrorDecoder();

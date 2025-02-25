@@ -36,6 +36,7 @@ public class CartService {
         this.userServiceConnection = userServiceConnection;
     }
 
+    // FIND
 
     // Listar carritos
     public List<Cart> findAll() {
@@ -68,10 +69,16 @@ public class CartService {
         return findById(id).getItems();
     }
 
+    // CREATE
+
     // Crear nuevo carrito
     public Cart newCart(NewCartDTO cartDTO){
         return repository.save(mapper.map(cartDTO));
     }
+
+
+    // EDIT
+
 
     // Agregar elemento a un carrito
     @Transactional
@@ -146,6 +153,8 @@ public class CartService {
                     element.getQuantity());
         }
     }
+
+    // DELETE
 
     // Eliminar elementos de un carrito
     @Transactional

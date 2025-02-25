@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-
+/**
+ * This class contains methods
+ */
 public final class LocalUtilityMethods {
 
     // https://stackoverflow.com/questions/25223553/how-can-i-create-an-utility-class
@@ -22,6 +24,22 @@ public final class LocalUtilityMethods {
     // T -> El tipo de objeto que almacena y que devuelve el repositorio (por ejemplo, User, Cart, Item, Product)
     // S -> Representa a la interface de repositorio que extiende a JPARepository (CartRepository, ProductRepository, etc)
     // U -> Tipo de Id del repositorio (Integer, Long, etc.)
+
+    /**
+     * Verifies that an element exists within a referenced {@link JpaRepository}.
+     * <p>This method and its variations in this class are means to abstract repeating verifications on repositories
+     * when there's a need to check if an element exists or not, across multiple object and indexing types.</p>
+     * <p>This method is meant to be executed in a standalone manner. It throws an exception and it stops the execution
+     * of a method if an element <i>doesn't</i>
+     * exist.</p>
+     * @param repository The actual repository object to execute the search in.
+     * @param id The ID to search.
+     * @param exceptionMessage The exception message to display in case the result is <b>negative</b>.
+     * @param httpStatusCode The {@code HttpStatus} code to return in case the result is <b>negative</b>.
+     * @param T The type of object that the repository holds and returns (Cart, Product, etc.).
+     * @param S The repository's interface (CartRepository, ProductRepository, etc.). It must extend {@code JpaRepository}.
+     * @param U ID type of the repository (Integer, Long, etc.).
+     */
     public static <T,S extends JpaRepository<T,U>, U> void verifyElementExists(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
 
         Optional<T> optionalElement = repository.findById(id);
@@ -45,6 +63,17 @@ public final class LocalUtilityMethods {
     }
 
     // Verificar que un elemento NO existe.
+
+    /**
+     *
+     * @param repository
+     * @param id
+     * @param exceptionMessage
+     * @param httpStatusCode
+     * @param <T>
+     * @param <S>
+     * @param <U>
+     */
     public static <T,S extends JpaRepository<T,U>, U> void verifyElementNotExists(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
         Optional<T> optionalElement = repository.findById(id);
 
@@ -53,6 +82,12 @@ public final class LocalUtilityMethods {
         }
     }
 
+    /**
+     * Returns a random line. Thought out as a quick and funny way to test if a part of the program gets to a certain
+     * point by printing to stdout.
+     * <p>The quotes are from the videogames Team Fortress 2 and Portal 2, and from the metal band Wind Rose.</p>
+     * @return A funny quote.
+     */
     public static String quickTest() {
         List<String> lines = Arrays.asList(
                 "I AM A DWARF AND I'M DIGGING A HOLE, DIGGY DIGGY HOLE, DIGGY DIGGY HOOOOLE",

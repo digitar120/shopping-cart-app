@@ -29,8 +29,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo(){
         return new ApiInfo(
-                "Shopping Cart API",
-                "API REST para combinar contenidos aprendidos de Java, Spring, tests unitarios, etc. ",
+                "Shopping Cart microservice",
+                "Cart managing component of a modular shopping cart REST API.",
                 "v1",
                 "Terms of Service URL",
                 "DIGITAR",

@@ -5,6 +5,10 @@ import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFac
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * This class enables a reactive Circuit Breaker pattern on FeignClient calls to the User Service.
+ * @author Gabriel Pérez (digitar120)
+ */
 @Configuration
 public class CircuitBreakerConfig {
     @Bean
