@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Product endpoint configuration.
+ * @author Gabriel Pérez (digitar120)
+ * @see Product
+ * @see ProductService
+ */
 @RestController
 @RefreshScope
 @RequestMapping("/products")
@@ -21,7 +27,12 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Listar todos
+    // Read operations
+
+    /**
+     * List all entries in the database.
+     * @return A list of all products registered.
+     */
     @GetMapping
     @Operation(summary = "Listar productos", description = "Listar todos los productos almacenados.")
     @ApiResponses(value = {
@@ -32,7 +43,11 @@ public class ProductController {
         return productService.listAllProducts();
     }
 
-    // Buscar por ID
+    /**
+     * Find a product, matching its ID.
+     * @param productId ID to match the product with.
+     * @return A matching product if the search is positive.
+     */
     @Operation(summary = "Buscar por ID", description = "Buscar un producto mediante ID.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Solicitud correcta"),
@@ -44,7 +59,11 @@ public class ProductController {
         return productService.findById(productId);
     }
 
-    // Encontrar por descripción
+    /**
+     * Find a product, matching its description
+     * @param description Description to match a product with.
+     * @return A matching product, if the search is positive.
+     */
     @Operation(summary = "Buscar por descripción", description = "Buscar un producto mediante una descripción.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Solicitud correcta"),
@@ -56,7 +75,13 @@ public class ProductController {
         return productService.findByDescription(description);
     }
 
-    // Agregar
+    // Create operations
+
+    /**
+     * Create a new product with the included description.
+     * @param description A description for the new product entry.
+     * @return A copy of the new entry in the database.
+     */
     @Operation(summary = "Agregar un producto", description = "Agregar un producto mediante una descripción, mediante URL.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Elemento agregado"),
@@ -68,7 +93,12 @@ public class ProductController {
         return productService.newProduct(description);
     }
 
-    // Eliminar
+    // Delete operations
+
+    /**
+     * Delete an item, matching its ID.
+     * @param id ID to match the item with.
+     */
     @Operation(summary = "Eliminar un elemento", description = "Eliminar un elemento, mediante ID.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Elemento eliminado"),

@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Date;
 
+/**
+ * Exception handler involved in the FC fallback behavior.
+ * @author Gabriel Pérez (digitar120)
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

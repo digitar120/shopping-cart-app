@@ -9,6 +9,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A mapper for creating new Cart objects.
+ * @author Gabriel Pérez (digitar120)
+ * @see IMapper
+ * @see Cart
+ * @see NewCartDTO
+ * @see com.digitar120.shoppingcartapp.service.CartService
+ */
 @Component
 public class CartDTOtoCart implements IMapper<NewCartDTO, Cart>{
 
