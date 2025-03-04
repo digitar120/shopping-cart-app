@@ -31,6 +31,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Unit testing for the Cart endpoint business logic.
+ * <p>Uses Mockito Spies for testing methods that depend on other methods in the same class, such as
+ * {@link CartService#getContent(Long)}, which depends on {@link CartService#findById(Long)}.</p>
+ * @author Gabriel Pérez (digitar120)
+ * @see CartService
+ * @see Cart
+ * @see ExpectedException
+ * @see CartDTOtoCart
+ * @see UserClient
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class CartServiceTest {
 
@@ -45,6 +56,10 @@ public class CartServiceTest {
 
     @InjectMocks
     private CartService service;
+
+    /**
+     * A Mockito Spy copy of {@code CartService service}, initialized with {@code setup()}.
+     */
     private CartService serviceSpy;
 
     @Mock
@@ -65,6 +80,7 @@ public class CartServiceTest {
         CART_1.getItems().add(new Item(1L, 5, null, new Product(1L) ));
     }
 
+    // Helper methods
 
     private void findByIdReturnsCart() {
         when(repository.findById(ID_CART_1)).thenReturn(Optional.of(CART_1));
@@ -84,7 +100,11 @@ public class CartServiceTest {
                 .when(repository).save(any(Cart.class));
     }
 
-    // findAll --------------------------------------------------------------------------------
+    // findAll
+
+    /**
+     * Assert that {@link CartService#findAll()} executes {@link CartRepository#findAll()}.
+     */
     @Test
     @DisplayName("findAll llama al reposositorio")
     public void test_when_findAll_then_repositorySearchCallMade(){
@@ -95,6 +115,9 @@ public class CartServiceTest {
         verify(repository, times(1)).findAll();
     }
 
+    /**
+     * Assert that {@link CartService#findAll()} returns a non-empty list.
+     */
     @Test
     @DisplayName("findAll no devuelve una lista vacía")
     public void test_when_findAll_and_repositoryResponseContainsElements_then_responseContainsElements(){
@@ -103,7 +126,12 @@ public class CartServiceTest {
         assertFalse(service.findAll().isEmpty());
     }
 
-    // findById --------------------------------------------------------------------------------
+    // findById
+
+    /**
+     * With {@link CartRepository#findById(Object)} returning a valid cart, assert that {@link CartService#findById(Long)}
+     * executes it.
+     */
     @Test
     @DisplayName("findById llama al repositorio para buscar")
     public void test_when_findById_then_repositorySearchCallMade(){
@@ -114,8 +142,10 @@ public class CartServiceTest {
         verify(repository, times(1)).findById(anyLong());
     }
 
-
-
+    /**
+     * With {@link CartRepository#findById(Object)} returning a valid cart, assert that its returned element matches
+     * the element returned by {@link CartService#findById(Long)}.
+     */
     @Test
     @DisplayName("findById devuelve elemento correcto")
     public void test_when_findById_then_returnsCorrectElement(){
@@ -125,6 +155,15 @@ public class CartServiceTest {
     }
 
     // findByUserId
+
+    /**
+     * With: <ul>
+     *     <li>{@link CartRepository#findById(Object)} returning a valid cart.</li>
+     *     <li>An {@link UserClient} connection returning <b>a positive response</b>.</li>
+     * </ul>
+     *
+     * <p>Assert that {@link CartService#findById(Long)} executes calls to both of those items.</p>
+     */
     @Test
     @DisplayName("findByUserId llama al repositorio y al servicio de usuarios")
     public void test_when_findByUserId_then_repositoryAndUserServiceCallsMade(){
@@ -140,7 +179,14 @@ public class CartServiceTest {
         verify(userServiceConnection, times(1)).getUserByUserId(1);
     }
 
-
+    /**
+     * With:
+     * <ul>
+     *     <li>{@link CartRepository#findById(Object)} returning a valid cart.</li>
+     *     <li>{@link UserClient#getUserByUserId(Integer)} returning an error response.</li>
+     * </ul>
+     * <p>Assert that {@link CartService#findByUserId(Integer)} throws an appropriate exception.</p>
+     */
     @Test
     @DisplayName("findByUserId arroja excepción al no poder conectar")
     public void test_when_findByUserId_and_cantConnect_then_exceptionThrown(){
@@ -153,6 +199,15 @@ public class CartServiceTest {
         service.findByUserId(1);
     }
 
+    /**
+     * With:
+     * <ul>
+     *  <li>{@link CartRepository#findByUserId(Integer)} returning an empty response.</li>
+     * <li>{@link UserClient#getUserByUserId(Integer)} returns a valid user.</li>
+     * </ul>
+     *
+     * <p>Assert that {@link CartService#findByUserId(Integer)} throws an appropriate exception.</p>
+     */
     @Test
     @DisplayName("findByUserId arroja excepción al no encontrar un elemento")
     public void test_when_findByUserId_and_elementNotFound_then_throwException(){
@@ -165,6 +220,15 @@ public class CartServiceTest {
         service.findByUserId(1);
     }
 
+    /**
+     * With:
+     * <ul>
+     * <li>{@link CartRepository#findByUserId(Integer)} returning a valid cart.</li>
+     * <li>{@link UserClient#getUserByUserId(Integer)} returning a valid user.</li>
+     * </ul>
+     *
+     * <p>Assert that the cart returned by the repository is the same as the cart returned by {@link CartService#findByUserId(Integer)}.</p>
+     */
     @Test
     @DisplayName("findByUserId devuelve elemento correcto")
     public void test_when_findByUserId_then_returnsCorrectElement(){
@@ -174,6 +238,11 @@ public class CartServiceTest {
         assertEquals(CART_1, service.findByUserId(1));
     }
 
+    /**
+     * With a spy copy of an instance of {@code CartService} executing {@link CartService#findById(Long)} and returning a valid
+     * cart, assert that {@link CartService#getContent(Long)} executes that method.
+     * @see Spy
+     */
     @Test
     @DisplayName("getContent llama para buscar")
     public void test_when_getContent_then_repositorySearchCallMade(){
@@ -184,6 +253,11 @@ public class CartServiceTest {
         verify(serviceSpy, times(1)).findById(any());
     }
 
+
+    /**
+     * Given a spy copy of an instance of {@code CartService}, executing {@link CartService#findById(Long)} and
+     * returning a valid cart, assert that the return of {@link CartService#getContent(Long)} is not empty.
+     */
     @Test
     @DisplayName("getContent no devuelve lista vacía")
     public void test_when_getContent_then_returnedListNotEmpty(){
@@ -192,6 +266,11 @@ public class CartServiceTest {
         assertFalse(serviceSpy.getContent(1L).isEmpty());
     }
 
+    /**
+     * Given a spy copy of an instance of {@code CartService}, executing {@link CartService#findById(Long)} and
+     * returning a valid cart, assert that {@link CartService#getContent(Long)} returns the same item set as that
+     * method.
+     */
     @Test
     @DisplayName("getContent devuelve lista correcta")
     public void test_when_getContent_then_retunrnsCorrectList(){
@@ -200,6 +279,10 @@ public class CartServiceTest {
         assertEquals(CART_1.getItems(), serviceSpy.getContent(1L));
     }
 
+    /**
+     * Given {@link CartDTOtoCart#map(NewCartDTO)} and {@link CartRepository#save(Object)} returning valid carts,
+     * assert that {@link CartService#newCart(NewCartDTO)} executes those two methods.
+     */
     @Test
     @DisplayName("newCart llama al rpeositorio y al mapper")
     public void test_when_newCart_then_repositoryAndMapperCallsMade(){
@@ -214,6 +297,11 @@ public class CartServiceTest {
         verify(mapper, times(1)).map(any());
     }
 
+    /**
+     * Given {@link CartDTOtoCart#map(NewCartDTO)} and {@link CartRepository#save(Object)} returning valid carts,
+     * assert that the return of {@link CartService#newCart(NewCartDTO)} matches with the return of the repository save
+     * call.
+     */
     @Test
     @DisplayName("newCart devuelve el elemento correcto")
     public void test_when_newCart_then_returnsCorrectElement(){
@@ -225,6 +313,12 @@ public class CartServiceTest {
         assertEquals(CART_1, service.newCart(cartDTO));
     }
 
+    // addItemToCart
+
+    /**
+     * Assert that {@link CartService#addItemToCart(Long, Long, Integer)} throws an appropriate exception if
+     * {@code quantity} equals or is below 0.
+     */
     @Test
     @DisplayName("addItemToCart arroja excepción si la quantity es negativa")
     public void test_when_addItemToCart_and_quantityIsNegative_then_throwException(){
@@ -234,6 +328,10 @@ public class CartServiceTest {
         service.addItemToCart(null, null, -1);
     }
 
+    /**
+     * Given a spy copy of {@code CartService} executing {@link CartService#findById(Long)} and returning a valid
+     * cart, assert that {@link CartService#addItemToCart(Long, Long, Integer)} executes that method.
+     */
     @Test
     @DisplayName("addItemToCart verifica que existe un carrito de código cartId")
     public void test_when_addItemToCart_then_verificationCallMade(){
@@ -244,6 +342,11 @@ public class CartServiceTest {
         verify(serviceSpy, times(1)).findById(CART_1.getId());
     }
 
+    /**
+     * Given a spy copy of {@code CartSerivce} executing {@link CartService#findById(Long)} and
+     * {@link CartRepository#save(Object)} returning valid carts, assert that
+     * {@link CartService#addItemToCart(Long, Long, Integer)} returns a cart edited cart object.
+     */
     @Test
     @DisplayName("addItemToCart actualiza cantidad de un ítem")
     public void test_when_addItemToCart_and_referendedProductExists_then_quantityUpdated(){
@@ -260,6 +363,11 @@ public class CartServiceTest {
         assertEquals(expectedCart, serviceSpy.addItemToCart(CART_1.getId(), 1L, 10));
     }
 
+    /**
+     * Given a spy copy of {@code CartService} executing {@link CartService#findById(Long)} and returning cart without
+     * items, and {@link CartRepository#save(Object)} returning a valid cart, assert that the spy copy executing
+     * {@link CartService#addItemToCart(Long, Long, Integer)} produces a proper result.
+     */
     @Test
     @DisplayName("addItemToCart crea un nuevo item si no existía previamente")
     public void test_when_addItemToCart_and_referencedProductNotExists_then_newItemCreated(){
@@ -272,6 +380,13 @@ public class CartServiceTest {
         assertEquals(CART_1, serviceSpy.addItemToCart(emptyCart.getId(), 1L, 5));
     }
 
+    // addMultipleItemsToCart
+
+    /**
+     * Given an invalid item set, assert that {@link CartService#addMultipleItemsToCart(Long, Set)} throws an
+     * appropriate exception.
+     * <p>Items added with this method must have null IDs, as they are added by the repository.</p>
+     */
     @Test
     @DisplayName("addMultipleItemsToCart arroja excepción si un ítem ingresado tiene Id")
     // No deben tener Id porque éste es asignado por el repositorio.
@@ -285,6 +400,11 @@ public class CartServiceTest {
         service.addMultipleItemsToCart(1L, incorrectItemSet);
     }
 
+    /**
+     * Given an item set containing two elements, and given a spy copy of {@code CartService} executing
+     * {@link CartService#addItemToCart(Long, Long, Integer)} returning valid carts, assert that
+     * {@link CartService#addMultipleItemsToCart(Long, Set)} executes that method two times.
+     */
     @Test
     @DisplayName("addMultipleItemsToCart ejecuta addItemToCart por cada item proveído")
     public void test_when_addMultipleItemsToCart_then_executesAddItemToCartForEachItemProvided(){
@@ -299,6 +419,13 @@ public class CartServiceTest {
         verify(serviceSpy, times(2)).addItemToCart(anyLong(), anyLong(), anyInt());
     }
 
+    // deleteItemFromCart
+
+    /**
+     * Given a spy copy of {@code CartService} executing {@link CartService#findById(Long)} and
+     * {@link CartRepository#save(Object)} returning valid carts, assert that {@link CartService#deleteItemFromCart(Long, Long)}
+     * executes that method.
+     */
     @Test
     @DisplayName("deleteItemFromCart llama para buscar")
     public void test_when_deleteItemFromCart_then_serviceSearchCallMade(){
@@ -310,6 +437,11 @@ public class CartServiceTest {
         verify(serviceSpy, times(1)).findById(1L);
     }
 
+    /**
+     * Given a spy copy of {@code CartService} executing {@link CartService#findById(Long)} that returns a valid cart,
+     * assert that executing {@link CartService#deleteItemFromCart(Long, Long)} with an invalid item ID triggers an
+     * appropriate exception.
+     */
     @Test
     @DisplayName("deleteItemFromCart arroja excepción si no encuentra el ítem")
     public void test_when_deleteItemFromCart_then_exceptionThrown(){
@@ -321,6 +453,11 @@ public class CartServiceTest {
         serviceSpy.deleteItemFromCart(1L, 2L);
     }
 
+    /**
+     * Given {@link CartService#findById(Long)} and {@link CartRepository#save(Object)} both returning valid carts,
+     * assert that the cart returned by {@link CartService#deleteItemFromCart(Long, Long)} lacks a previously deleted
+     * item.
+     */
     @Test
     @DisplayName("deleteItemFromCart borra efectivamente un ítem")
     public void test_when_deleteItemFromCart_then_itemIsDeleted(){
@@ -330,6 +467,14 @@ public class CartServiceTest {
         assertTrue(serviceSpy.deleteItemFromCart(1L, 1L).getItems().isEmpty());
     }
 
+    // deleteCart
+
+    /**
+     * Given {@link CartRepository#findById(Object)} returning a valid cart, verify that executing
+     * {@link CartService#deleteCart(Long)} executes that method.
+     * <p>Note: {@link CartRepository#deleteById(Object)}, a {@code void} method, needs to be marked with the
+     * {@code Mockito.doNothing()} flag.</p>
+     */
     @Test
     @DisplayName("deleteCart llama para borrar")
     public void test_when_deleteCart_then_repositoryDeleteCallMade(){
@@ -341,6 +486,13 @@ public class CartServiceTest {
         verify(repository, times(1)).deleteById(1L);
     }
 
+    // deleteCartByUserId
+
+    /**
+     * Given {@link CartRepository#findById(Object)} returning a valid cart, assert that
+     * {@link CartService#deleteCartByUserId(Integer)} executes that method, and also
+     * {@link CartRepository#deleteById(Object)}.
+     */
     @Test
     @DisplayName("deleteCartByUserId llama para buscar y para borrar")
     public void test_when_deleteCartByUserId_then_repositorySearchAndDeletionCallsMade(){
@@ -352,6 +504,11 @@ public class CartServiceTest {
         verify(repository, times(1)).deleteById(anyLong());
     }
 
+    /**
+     * Given {@link CartRepository#findByUserId(Integer)} returning an empty response, assert that
+     * {@link CartService#deleteCartByUserId(Integer)} throws an appropriate exception.
+     *
+     */
     @Test
     @DisplayName("deleteCartByUserId arroja excepción si no encuentra el carrito")
     public void test_when_deleteCartByUserId_and_cartNotFound_then_throwException(){

@@ -25,6 +25,13 @@ import java.util.*;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Item endpoint business logic.
+ * @author Gabriel Pérez (digitar120)
+ * @see Item
+ * @see ItemService
+ * @see ItemRepository
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ItemServiceTest {
     private static final Long ITEMCODE_PENCIL_2B = 1L;
@@ -48,6 +55,9 @@ public class ItemServiceTest {
     private static final List<Item> itemList = Arrays.asList(ITEM_PENCIL_2B, ITEM_PEN);
 
 
+    /**
+     * Initialize test item sets and carts.
+     */
     @Before
     public void itemSetSetup(){
         itemHashSet.add(ITEM_PENCIL_2B);
@@ -68,6 +78,8 @@ public class ItemServiceTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    // Method extractions
+
     private void findByIdOf2BReturnsItem() {
         when(repository.findById(ITEMCODE_PENCIL_2B)).thenReturn(Optional.of(ITEM_PENCIL_2B));
     }
@@ -83,6 +95,11 @@ public class ItemServiceTest {
     }
 
     // findAll
+
+    /**
+     * Given {@link ItemRepository#findAll()} returning a non-empty list, assert that {@link ItemService#findAll()}
+     * executes that method.
+     */
     @Test
     @DisplayName("findAll llama al repositorio")
     public void test_when_findAll_then_callsRepository(){
@@ -93,6 +110,10 @@ public class ItemServiceTest {
         verify(repository, times(1)).findAll();
     }
 
+    /**
+     * Given {@link ItemRepository#findAll()} returning a non-empty list, assert that the return of {@link ItemService#findAll()}
+     * is also non-empty.
+     */
     @Test
     @DisplayName("findAll no devuelve listas vacías")
     public void test_when_findAll_then_noEmptyListsReturned(){
@@ -103,6 +124,11 @@ public class ItemServiceTest {
 
 
     //--------------------------------findById-----------------------------
+
+    /**
+     * Given {@link ItemRepository#findById(Object)} returning a matching item, assert that {@link ItemService#findById(Long)}
+     * executes that method.
+     */
     @Test
     @DisplayName("findById llama al repositorio usando el argumento dado")
     public void test_when_findAll_then_callMadeUsingGivenArgument(){
@@ -113,6 +139,10 @@ public class ItemServiceTest {
         verify(repository, times(1)).findById(ITEMCODE_PENCIL_2B);
     }
 
+    /**
+     * Given {@link ItemRepository#findById(Object)} returning nothing, assert that {@link ItemService#findById(Long)}
+     * throws an appropriate exception.
+     */
     @Test
     @DisplayName("findById arroja excepción correctamente al no encontrar un elemento")
     public void test_when_findById_and_elementNotFound_then_throwException(){
@@ -124,6 +154,10 @@ public class ItemServiceTest {
         service.findById(ITEMCODE_PENCIL_2B);
     }
 
+    /**
+     * Given {@link ItemRepository#findById(Object)} returning a matching item, assert that its return and the return of
+     * {@link ItemService#findById(Long)} are the same.
+     */
     @Test
     @DisplayName("findById devuelve elemento correcto con búsqueda correcta")
     public void test_when_findById_and_argumentIsCorrect_then_returnCorrectElement(){
@@ -133,6 +167,11 @@ public class ItemServiceTest {
     }
 
     // saveToRepo -------------------------------------------------------------------------------------
+
+    /**
+     * Given {@link ItemRepository#findById(Object)} returning nothing and {@link ItemRepository#save(Object)} returning
+     * a valid item, assert that {@link ItemService#saveToRepo(Item)} executes the later method.
+     */
     @Test
     @DisplayName("saveToRepo llama al repositorio para guardar un item")
     public void test_when_saveToRepo_then_repositorySaveCallMade(){
@@ -144,6 +183,10 @@ public class ItemServiceTest {
         verify(repository, times(1)).save(ITEM_PENCIL_2B);
     }
 
+    /**
+     * Given {@link ItemRepository#findById(Object)} returning nothing and {@link ItemRepository#save(Object)} returning
+     * a valid item, assert that {@link ItemService#saveToRepo(Item)} executes the former method.
+     */
     @Test
     @DisplayName("saveToRepo llama al repositorio para verificar existencia")
     public void test_when_saveToRepo_then_repositoryVerificationCallMade(){
@@ -155,6 +198,10 @@ public class ItemServiceTest {
         verify(repository, times(1)).findById(ITEMCODE_PENCIL_2B);
     }
 
+    /**
+     * Given {@link ItemRepository#findById(Object)} returning nothing, and {@link ItemRepository#save(Object)}
+     * returning a valid item, assert its return and the return of {@link ItemService#saveToRepo(Item)} are the same.
+     */
     @Test
     @DisplayName("saveToRepo devuelve el objeto correcto")
     public void test_when_saveToRepo_then_returnCorrectObject(){

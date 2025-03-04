@@ -20,6 +20,12 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit testing for {@link LocalUtilityMethods}.
+ * @author Gabriel Pérez (digitar120)
+ * @see org.springframework.data.jpa.repository.JpaRepository
+ * @see ExpectedException
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class LocalUtilityMethodsTest {
 
@@ -37,6 +43,13 @@ public class LocalUtilityMethodsTest {
     @Before
     public void setup(){}
 
+
+    // verifyElementExists
+
+    /**
+     * Return an Optional containing an empty Product when executing {@link ProductRepository#findById(Object)},
+     * then verify that {@code verifyElementExists()} executes that method.
+     */
     @Test
     @DisplayName("verifiyElementExists llama para buscar")
     public void test_when_verifyElementExists_then_repositorySearchCallMade(){
@@ -47,6 +60,10 @@ public class LocalUtilityMethodsTest {
         verify(repository, times(1)).findById(1L);
     }
 
+    /**
+     * Return an empty Optional when executing a repository's {@code findById()}, then assert that {@code verifyElementExists()}
+     * throws an appropriate exception.
+     */
     @Test
     @DisplayName("verifyElementExists arroja excepción")
     public void test_when_verifyElementExists_and_elementNotFound_then_throwException(){
@@ -58,6 +75,12 @@ public class LocalUtilityMethodsTest {
         LocalUtilityMethods.verifyElementExists(repository, 1L, "Mensaje", HttpStatus.NOT_FOUND);
     }
 
+    // verifyElementExistsAndReturn
+
+    /**
+     * Return an Optional containing an empty Product when executing {@link ProductRepository#findById(Object)}, then
+     * assert that {@code verifyElementExistsAndReturn()} executes that method.
+     */
     @Test
     @DisplayName("verifyElementExistsAndReturn llama para buscar")
     public void test_when_verifyElementExistsAndReturn_then_repositorySearchCallMade(){
@@ -68,6 +91,10 @@ public class LocalUtilityMethodsTest {
         verify(repository, times(1)).findById(1L);
     }
 
+    /**
+     * When executing {@link ProductRepository#findById(Object)}, return an empty Optional. Then, assert that {@code verifyElementExistsAndReturn()}
+     * throws an appropriate exception.
+     */
     @Test
     @DisplayName("verifyElementExistsAndReturn arroja excepción")
     public void test_when_verifyElementExistsAndReturn_and_elementNotFound_then_throwException(){
@@ -79,6 +106,10 @@ public class LocalUtilityMethodsTest {
         LocalUtilityMethods.verifyElementExistsAndReturn(repository, 1L, "Mensaje", HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * When executing {@link ProductRepository#findById(Object)}, return an Optional containing a Product, then assert
+     * that the same Product is returned by {@code verifyElementExistsAndReturn}.
+     */
     @Test
     @DisplayName("verifyElementExistsAndReturn devuelve el elemento correcto")
     public void test_when_verifyElementExistsAndReturn_then_returnsCorrectObject(){
@@ -89,6 +120,12 @@ public class LocalUtilityMethodsTest {
                 LocalUtilityMethods.verifyElementExistsAndReturn(repository, 1L, "Mensaje", HttpStatus.NOT_FOUND));
     }
 
+    // verifyElementNotExists
+
+    /**
+     * When executing {@link ProductRepository#findById(Object)}, return an empty Optional. Then, assert that {@code verifyElementNotExists}
+     * executes that method.
+     */
     @Test
     @DisplayName("verifyElementNotExists llama para buscar")
     public void test_when_verifiyElementNotExists_then_repositorySearchCallMade(){
@@ -99,6 +136,10 @@ public class LocalUtilityMethodsTest {
         verify(repository, times(1)).findById(1L);
     }
 
+    /**
+     * When executing {@link ProductRepository#findById(Object)}, return an Optional containing a Product. Then, assert
+     * that {@code verifyElementNotExists} throws an appropriate exception.
+     */
     @Test
     @DisplayName("verifyElementNotExists arroja excepción")
     public void test_when_verifyElementNotExists_and_elementFound_then_throwsException(){
