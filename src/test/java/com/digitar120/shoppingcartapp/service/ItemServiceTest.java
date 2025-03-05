@@ -211,6 +211,10 @@ public class ItemServiceTest {
         assertEquals(ITEM_PENCIL_2B, service.saveToRepo(ITEM_PENCIL_2B));
     }
 
+    /**
+     * Given {@link ItemRepository#save(Object)} returning a valid item, assert that {@link ItemService#newItem(Long, Long, Integer)}
+     * executes that method.
+     */
     @Test
     @DisplayName("newItem llama al repositorio para guardar un ítem")
     public void test_when_newItem_then_repositorySaveCallMade(){
@@ -221,6 +225,10 @@ public class ItemServiceTest {
         verify(repository, times(1)).save(any(Item.class));
     }
 
+    /**
+     * Given {@link ItemRepository#save(Object)} returning a valid item, assert that that item is the same as the one
+     * returned by {@link ItemService#newItem(Long, Long, Integer)}.
+     */
     @Test
     @DisplayName("newItem devuelve el objeto correcto")
     public void test_when_newItem_then_returnsCorrectItem(){
@@ -241,6 +249,16 @@ public class ItemServiceTest {
 
     // editItem ---------------------------------------------------------------------------------------
 
+    /**
+     * Given the following methods returning a valid item:
+     * <ul>
+     * <li>{@link ItemRepository#findById(Object)}</li>
+     * <li>{@link ItemRepository#save(Object)}</li>
+     * <li>{@link ItemToEditedItem#map(EditedItemDTO)}</li>
+     * </ul>
+     * <p>Assert that {@link ItemService#editItem(EditedItemDTO, Long)} executes the first two.</p>
+     * methods.
+     */
     @Test
     @DisplayName("editItem llama al repositorio para guardar y verificar")
     public void test_when_editItem_then_repositorySaveAndVerificationCallsMade(){
@@ -254,6 +272,10 @@ public class ItemServiceTest {
         verify(repository, times(1)).findById(ITEMCODE_PENCIL_2B);
     }
 
+    /**
+     * Given {@link ItemRepository#findById(Object)} returning nothing, assert that {@link ItemService#editItem(EditedItemDTO, Long)}
+     * throws an appropriate exception.
+     */
     @Test
     @DisplayName("editItem arroja excepción correctamente")
     public void test_when_editItem_then_exceptionThrownCorrectly(){
@@ -265,6 +287,15 @@ public class ItemServiceTest {
         service.editItem(new EditedItemDTO( 5), ITEMCODE_PENCIL_2B);
     }
 
+    /**
+     * Given the following methods returning valid items:
+     * <ul>
+     * <li>{@link ItemRepository#findById(Object)}</li>
+     * <li> {@link ItemRepository#save(Object)}</li>
+     * <li> {@link ItemToEditedItem#map(EditedItemDTO)}</li>
+     * </ul>
+     * <p>Assert that the return of {@link ItemService#editItem(EditedItemDTO, Long)} equals a control item.</p>
+     */
     @Test
     @DisplayName("editItem devuelve objetos correctamente")
     public void test_when_editItem_then_returnsCorrectObject(){
@@ -275,6 +306,18 @@ public class ItemServiceTest {
         assertEquals(ITEM_PENCIL_2B, service.editItem(new EditedItemDTO( 5), ITEMCODE_PENCIL_2B));
     }
 
+    /**
+     * Given the following method returning a valid item:
+     * <ul>
+     * <li> {@link ItemRepository#findById(Object)}</li>
+     * </ul>
+     * <p>Assert that {@link ItemService#deleteById(Long)} executes that method, and also the following:
+     * <ul>
+     * <li> {@link ItemRepository#deleteById(Object)}</li>
+     * </ul>
+     * </p>
+     *
+     */
     @Test
     @DisplayName("deleteItem llama al repositorio para verificar y borrar")
     public void test_when_editItem_then_repositoryVerificationAndDeletionCallsMade(){
@@ -286,6 +329,13 @@ public class ItemServiceTest {
         verify(repository, times(1)).deleteById(ITEMCODE_PENCIL_2B);
     }
 
+    /**
+     * Given the following method returning nothing:
+     * <ul>
+     * <li> {@link ItemRepository#findById(Object)}</li>
+     * </ul>
+     * <p>Assert that {@link ItemRepository#deleteById(Object)} throws an appropriate exception.</p>
+     */
     @Test
     @DisplayName("deleteItem arroja excepción correctamente")
     public void test_when_deleteItem_then_exceptionThrownCorrectly(){
