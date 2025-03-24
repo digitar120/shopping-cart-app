@@ -17,8 +17,6 @@ import java.util.Random;
  */
 public final class LocalUtilityMethods {
 
-    //
-
     private LocalUtilityMethods(){}
 
 
@@ -33,9 +31,9 @@ public final class LocalUtilityMethods {
      * @param id The ID to search.
      * @param exceptionMessage The exception message to display in case the result is <b>negative</b>.
      * @param httpStatusCode The {@code HttpStatus} code to return in case the result is <b>negative</b>.
-     * @param T The type of object that the repository holds and returns (Cart, Product, etc.).
-     * @param S The repository's interface (CartRepository, ProductRepository, etc.). It must extend {@code JpaRepository}.
-     * @param U ID type of the repository (Integer, Long, etc.).
+     * @param <T> The type of object that the repository holds and returns (Cart, Product, etc.).
+     * @param <S> The repository's interface (CartRepository, ProductRepository, etc.). It must extend {@code JpaRepository}.
+     * @param <U> ID type of the repository (Integer, Long, etc.).
      */
     public static <T,S extends JpaRepository<T,U>, U> void verifyElementExists(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
 
@@ -58,9 +56,9 @@ public final class LocalUtilityMethods {
      * @param exceptionMessage The exception message to display in case the result is <b>negative</b>.
      * @param httpStatusCode The {@code HttpStatus} code to return in case the result is <b>negative</b>.
      * @return A matching object, if found.
-     * @param T The type of object that the repository holds and returns (Cart, Product, etc.).
-     * @param S The repository's interface (CartRepository, ProductRepository, etc.). It must extend {@code JpaRepository}.
-     * @param U ID type of the repository (Integer, Long, etc.).
+     * @param <T> The type of object that the repository holds and returns (Cart, Product, etc.).
+     * @param <S> The repository's interface (CartRepository, ProductRepository, etc.). It must extend {@code JpaRepository}.
+     * @param <U> ID type of the repository (Integer, Long, etc.).
      */
     public static <T,S extends JpaRepository<T,U>, U> T verifyElementExistsAndReturn(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
         Optional<T> optionalElement = repository.findById(id);
@@ -72,8 +70,6 @@ public final class LocalUtilityMethods {
         return optionalElement.get();
     }
 
-    // Verificar que un elemento NO existe.
-
     /**
      * Another variation of {@link LocalUtilityMethods#verifyElementExists(JpaRepository, Object, String, HttpStatus)},
      * but it fails if a search is <b>positive</b>.
@@ -83,9 +79,9 @@ public final class LocalUtilityMethods {
      * @param id The ID to search.
      * @param exceptionMessage The exception message to display in case the result is <b>positive</b>.
      * @param httpStatusCode The {@code HttpStatus} code to return in case the result is <b>positive</b>.
-     * @param T The type of object that the repository holds and returns (Cart, Product, etc.).
-     * @param S The repository's interface (CartRepository, ProductRepository, etc.). It must extend {@code JpaRepository}.
-     * @param U ID type of the repository (Integer, Long, etc.).
+     * @param <T> The type of object that the repository holds and returns (Cart, Product, etc.).
+     * @param <S> The repository's interface (CartRepository, ProductRepository, etc.). It must extend {@code JpaRepository}.
+     * @param <U> ID type of the repository (Integer, Long, etc.).
      */
     public static <T,S extends JpaRepository<T,U>, U> void verifyElementNotExists(S repository, U id, String exceptionMessage, HttpStatus httpStatusCode){
         Optional<T> optionalElement = repository.findById(id);
