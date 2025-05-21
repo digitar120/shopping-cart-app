@@ -6,7 +6,3 @@ spring:
     config:
       uri: http://${CONFIG_SERVER_IP}:${CONFIG_SERVER_PORT}
       profile: dev-nosec
-
-#eureka:
-#  instance:
-    #hostname: host.docker.internal
