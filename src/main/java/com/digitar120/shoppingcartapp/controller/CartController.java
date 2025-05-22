@@ -34,13 +34,11 @@ public class CartController {
      * List all entries.
      * @return A cart list of all entries in the database.
      */
-    @Operation(summary = "Listar todos los carritos", description = "Devuelve todos los carritos almacenados.")
+    @Operation(summary = "List all carts.", description = "Produces a JSON object containing all registered carts and their items.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Completado correctamente"),
-            @ApiResponse(code = 404, message = "No se encontró el carrito"),
-            // Debería incluir error 400 para todos los métodos? Es correcto también incluir una
-            // descripción para un error 500?
-            @ApiResponse(code = 500, message = "Algo salió mal.")
+            @ApiResponse(code = 200, message = "Search successful."),
+            @ApiResponse(code = 404, message = "Cart not found."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @GetMapping
     public List<Cart> findAll(){
@@ -52,11 +50,11 @@ public class CartController {
      * @param id ID to match the cart with.
      * @return If the search is positive, a matching cart.
      */
-    @Operation(summary = "Encontrar un carrito mediante ID.", description = "Devuelve un carrito junto con su lista de ítems y sus productos referenciados..")
+    @Operation(summary = "Find a cart by ID.", description = "Produces a JSON object with details about the requested cart.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Completado correctamente"),
-            @ApiResponse(code = 404, message = "No se encontró el carrito"),
-            @ApiResponse(code = 500, message = "Algo salió mal.")
+            @ApiResponse(code = 200, message = "Search successful."),
+            @ApiResponse(code = 404, message = "Cart not found."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @GetMapping("/{id}")
     public Cart findById(@PathVariable Long id){
@@ -68,10 +66,10 @@ public class CartController {
      * @param userId Referenced user ID to match the cart with.
      * @return A matching cart, if the search is positive.
      */
-    @Operation(summary = "Encontrar mediante ID de usuario", description = "Devuelve un objeto carrito mediante ID de usuario.")
+    @Operation(summary = "Find a cart by its user ID", description = "Produce a JSON object with details about the matching cart, verifying beforehand that the user exists by running a search against the Users microservice.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Completado correctamente."),
-            @ApiResponse(code=404, message = "No se encontró al usuario o al carrito.")
+            @ApiResponse(code = 200, message = "Search successful."),
+            @ApiResponse(code=404, message = "User or cart not found.")
     })
     @GetMapping("/by-userid/{userId}")
     public Cart findByUserId(@PathVariable Integer userId){
@@ -83,11 +81,11 @@ public class CartController {
      * @param id ID to match the cart with.
      * @return A matching cart's item set.
      */
-    @Operation(summary = "Contenidos de un carrito.", description = "Listar contenidos de un carrito, mediante ID.")
+    @Operation(summary = "Show the contents of a car.t", description = "Produce a JSON object with details about a cart's items.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Completado correctamente"),
-            @ApiResponse(code = 404, message = "No se encontró el carrito"),
-            @ApiResponse(code = 500, message = "Algo salió mal.")
+            @ApiResponse(code = 200, message = "Request completed successfully."),
+            @ApiResponse(code = 404, message = "Cart not found."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @GetMapping("/{id}/items")
     public Set<Item> getCartItems (@PathVariable Long id){
@@ -102,10 +100,10 @@ public class CartController {
      * @return A copy of the new cart object.
      */
     @PostMapping
-    @Operation(summary = "Crear un carrito.", description = "Crear un nuevo carrito, introduciendo una descripción.")
+    @Operation(summary = "Create a new cart.", description = "Given a JSON object containing a string named \"description\", create a new cart.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Completado correctamente"),
-            @ApiResponse(code = 400, message = "Solicitud errónea")
+            @ApiResponse(code = 200, message = "Request completed successfully."),
+            @ApiResponse(code = 400, message = "Bad request. Try again.")
     })
     public Cart newCart(@RequestBody NewCartDTO newCartDTO){
         return service.newCart(newCartDTO);
@@ -120,12 +118,12 @@ public class CartController {
      * @param quantity Quantity of the product to add to the set.
      * @return An updated cart entry.
      */
-    @Operation(summary = "Agregar elemento", description = "Agregar un único elemento al carrito, utilizando una URL.")
+    @Operation(summary = "Add an item to a cart.", description = "Given a cart's ID, a product's ID and a quantity, add a new item (associated to a product) to a cart's item set.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Elemento agregado"),
-            @ApiResponse(code = 400, message = "La cantidad de producto ingresada es inválida."),
-            @ApiResponse(code = 404, message = "No se encontró el producto referenciado."),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Element added."),
+            @ApiResponse(code = 400, message = "Bad request. Invalid quantity."),
+            @ApiResponse(code = 404, message = "Referenced product not found."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @PostMapping("/{cart_id}/product/{product_id}/quantity/{quantity}")
     public Cart addItemToCart(@PathVariable Long cart_id, @PathVariable Long product_id, @PathVariable Integer quantity)    {
@@ -137,12 +135,12 @@ public class CartController {
      * @param cartId ID of the cart to affect.
      * @param itemSet Item set to add to the cart. Read from JSON.
      */
-    @Operation(summary = "Agregar varios elementos", description = "Agregar varios elementos, mediante JSON.")
+    @Operation(summary = "Add multiple items to a cart.", description = "Given a JSON object containing one or more item objects with full information, add those items to a cart's item set.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Elementos agregados"),
-            @ApiResponse(code = 404, message = "No se encontró el producto referenciado en uno de los ítems."),
-            @ApiResponse(code = 400, message = "La cantidad ingresada en uno de los ítems es inválida"),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Elements added."),
+            @ApiResponse(code = 404, message = "Could not find a referenced product from one of the items."),
+            @ApiResponse(code = 400, message = "An item has an invalid quantity."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @PostMapping("/{cartId}")
     public void addMultipleItemsToCart(@PathVariable Long cartId, @RequestBody Set<Item> itemSet){
@@ -157,11 +155,11 @@ public class CartController {
      * @param itemId ID of the item to delete.
      * @return A copy of the updated cart entry.
      */
-    @Operation(summary = "Eliminar elemento", description = "Eliminar un elemento de un carrito, mediante ID del carrito e ID del elemento.")
+    @Operation(summary = "Delete a cart's item.", description = "Given a cart ID and an item ID, remove that item from the cart's item set.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ítem eliminado"),
-            @ApiResponse(code = 404, message = "No se encontró el carrito o el elemento."),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Item removed."),
+            @ApiResponse(code = 404, message = "Cart or item not found."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @DeleteMapping("/{cartId}/item/{itemId}")
     public Cart deleteItemFromCart(@PathVariable Long cartId, @PathVariable Long itemId){
@@ -172,11 +170,11 @@ public class CartController {
      * Delete a cart.
      * @param cartId ID of the cart to delete.
      */
-    @Operation(summary = "Eliminar carrito", description = "Eliminar un carrito, mediante ID.")
+    @Operation(summary = "Delete a cart", description = "Given a cart ID, delete a cart and its registered items.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Carrito eliminado"),
-            @ApiResponse(code = 404, message = "No se encontró el carrito."),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Cart deleted."),
+            @ApiResponse(code = 404, message = "Cart not found."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @DeleteMapping("/{cartId}")
     public void deleteCart(@PathVariable Long cartId){

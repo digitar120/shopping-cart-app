@@ -34,10 +34,10 @@ public class ProductController {
      * @return A list of all products registered.
      */
     @GetMapping
-    @Operation(summary = "Listar productos", description = "Listar todos los productos almacenados.")
+    @Operation(summary = "List all products.", description = "Produce a JSON object with details about all registered products.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Solicitud correcta"),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Request completed correctly."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     public List<Product> listAllProducts(){
         return productService.listAllProducts();
@@ -48,11 +48,11 @@ public class ProductController {
      * @param productId ID to match the product with.
      * @return A matching product if the search is positive.
      */
-    @Operation(summary = "Buscar por ID", description = "Buscar un producto mediante ID.")
+    @Operation(summary = "Find a product by its ID.", description = "Given a product ID, produce a JSON object with a matching product's details.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Solicitud correcta"),
-            @ApiResponse(code = 404, message = "No se encontró el producto"),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Request completed correctly."),
+            @ApiResponse(code = 404, message = "Could not find a product with that ID."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @GetMapping("/{productId}")
     public Product findById(@PathVariable Long productId){
@@ -64,11 +64,11 @@ public class ProductController {
      * @param description Description to match a product with.
      * @return A matching product, if the search is positive.
      */
-    @Operation(summary = "Buscar por descripción", description = "Buscar un producto mediante una descripción.")
+    @Operation(summary = "Find a product by its description.", description = "Given a description string, produce a JSON object with a matching product's details.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Solicitud correcta"),
-            @ApiResponse(code = 404, message = "No se encontró un producto con esa descripción."),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Request completed correctly."),
+            @ApiResponse(code = 404, message = "Could not find a product with that description."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @GetMapping("/{description}")
     public List<Product> findByDescription(@PathVariable String description){
@@ -82,11 +82,11 @@ public class ProductController {
      * @param description A description for the new product entry.
      * @return A copy of the new entry in the database.
      */
-    @Operation(summary = "Agregar un producto", description = "Agregar un producto mediante una descripción, mediante URL.")
+    @Operation(summary = "Add a product.", description = "Given a description string, register a new product.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Elemento agregado"),
-            @ApiResponse(code = 400, message = "Ya existe un producto con esa descripción."),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Element added."),
+            @ApiResponse(code = 400, message = "Bad request. Found an existing product with the same description. Try again."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @PostMapping("/{description}")
     public Product newProduct(@PathVariable String description){
@@ -99,11 +99,11 @@ public class ProductController {
      * Delete an item, matching its ID.
      * @param id ID to match the item with.
      */
-    @Operation(summary = "Eliminar un elemento", description = "Eliminar un elemento, mediante ID.")
+    @Operation(summary = "Delete a product.", description = "Given a numeric ID, delete a registered product.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Elemento eliminado"),
-            @ApiResponse(code = 404, message = "No se encontró el producto"),
-            @ApiResponse(code = 500, message = "Algo salió mal")
+            @ApiResponse(code = 200, message = "Element deleted."),
+            @ApiResponse(code = 404, message = "Element not found."),
+            @ApiResponse(code = 500, message = "Internal server error.")
     })
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id){
