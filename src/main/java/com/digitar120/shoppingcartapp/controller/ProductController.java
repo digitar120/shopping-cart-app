@@ -2,6 +2,7 @@ package com.digitar120.shoppingcartapp.controller;
 
 import com.digitar120.shoppingcartapp.persistence.entity.Product;
 import com.digitar120.shoppingcartapp.service.ProductService;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +35,7 @@ public class ProductController {
      * @return A list of all products registered.
      */
     @GetMapping
-    @Operation(summary = "List all products.", description = "Produce a JSON object with details about all registered products.")
+    @ApiOperation(value = "List all products.", notes = "Produce a JSON object with details about all registered products.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Request completed correctly."),
             @ApiResponse(code = 500, message = "Internal server error.")
@@ -48,7 +49,7 @@ public class ProductController {
      * @param productId ID to match the product with.
      * @return A matching product if the search is positive.
      */
-    @Operation(summary = "Find a product by its ID.", description = "Given a product ID, produce a JSON object with a matching product's details.")
+    @ApiOperation(value = "Find a product by its ID.", notes = "Given a product ID, produce a JSON object with a matching product's details.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Request completed correctly."),
             @ApiResponse(code = 404, message = "Could not find a product with that ID."),
@@ -64,7 +65,7 @@ public class ProductController {
      * @param description Description to match a product with.
      * @return A matching product, if the search is positive.
      */
-    @Operation(summary = "Find a product by its description.", description = "Given a description string, produce a JSON object with a matching product's details.")
+    @ApiOperation(value = "Find a product by its description.", notes = "Given a description string, produce a JSON object with a matching product's details.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Request completed correctly."),
             @ApiResponse(code = 404, message = "Could not find a product with that description."),
@@ -82,7 +83,7 @@ public class ProductController {
      * @param description A description for the new product entry.
      * @return A copy of the new entry in the database.
      */
-    @Operation(summary = "Add a product.", description = "Given a description string, register a new product.")
+    @ApiOperation(value = "Add a product.", notes = "Given a description string, register a new product.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Element added."),
             @ApiResponse(code = 400, message = "Bad request. Found an existing product with the same description. Try again."),
@@ -99,7 +100,7 @@ public class ProductController {
      * Delete an item, matching its ID.
      * @param id ID to match the item with.
      */
-    @Operation(summary = "Delete a product.", description = "Given a numeric ID, delete a registered product.")
+    @ApiOperation(value = "Delete a product.", notes = "Given a numeric ID, delete a registered product.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Element deleted."),
             @ApiResponse(code = 404, message = "Element not found."),
