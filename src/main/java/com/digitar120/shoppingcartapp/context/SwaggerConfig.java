@@ -29,7 +29,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo(){
         return new ApiInfo(
-                "Shopping Cart microservice",
+                "Carts API",
                 "Cart managing component of a modular shopping cart REST API.",
                 "v1",
                 "Terms of Service URL",
